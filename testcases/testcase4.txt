@@ -1,0 +1,25 @@
+/*
+
+
+*/  int a = 5;
+
+// /*
+
+*/ 
+
+/* 
+/*   
+*/
+*/
+
+char c = 'i';
+"for, do, while, break, continue", /*this is a comment */"if, else, return, struct, switch, case", 
+default,const, signed, unsigned, short, long,NULL, __COUNTER__, __LINE__, INT_MAX, INT_MIN, CHAR_MAX, 
+CHAR_MIN, MAX, MIN
+-.0wk"a0id0            a"
+++0.
+'a', 'b', '\t', '\0'              
+a_b/123
+s.f
+"\\n"
+

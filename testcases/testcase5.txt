@@ -1,0 +1,32 @@
+"DE     JA 'VU'"
+'A'
+'\\'
+" \" "
+"  ' "
+"\n  \" \t \'"
+
+float  _var = +1.
+if(a == b)
+{
+
+}else if(_var != -0.)
+{
+    switch()
+    {
+        
+        default:
+        break;
+    }
+}
+
+int d[5];
+
+if(a==1&&b==-1.5||c>=5&&!d)
+{
+    d[2]++;
+}
+
+a[c[i]];
+'\''
+
+'b''\t'
