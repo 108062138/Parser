@@ -53,7 +53,33 @@ char* reserveStr(){
 %token <sVal> RETURN BREAK CONTINUE FOR WHILE DO SWITCH CASE DEFAULT IF ELSE
 %token <sVal> IDENT
 //OPER VALUE
-%token<sVal> ASSIGN MULSTAR
+//ORDER 14
+%token<sVal> ASSIGN
+//ORDER 12
+%token<sVal> LOGICALOR
+//ORDER 11
+%token<sVal> LOGICALAND 
+//ORDER 10
+%token<sVal> BITWISEOR
+//ORDER 09
+%token<sVal> XOR
+//ORDER 08
+
+//ORDER 07
+%token<sVal> EQ NOTEQ
+//ORDER 06
+%token<sVal> BIGOREQ SMALLOREQ BIG SMALL
+//ORDER 05
+%token<sVal> SHIFTLEFT SHIFTRIGHT 
+//ORDER 04
+
+//ORDER 03
+%token<sVal> SLASH MOD
+//ORDER 02
+%token<sVal> ADD MINUS TILDA EXCLAMATION BITWISEAND  MULSTAR
+//PRECE 01
+%token<sVal> ADDONE MINUSONE    
+
 //PUNC
 %token<sVal> COMMA EOL LSQUAREBRACKET RSQUAREBRACKET LBRACE RBRACE LPARENTHESIS RPARENTHESIS COLON
 %type <sVal> giveScalar id ident identList scalarDeclare type type1 type2 type3 type4 mayHaveConst mayHaveSign mayLongOrShort

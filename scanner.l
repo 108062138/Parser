@@ -161,7 +161,16 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
     yylval.sVal = strdup(charBuffer); 
     return MYCHAR;
 }
-
+"++" { yylval.sVal = strdup(yytext); return ADDONE;}
+"--" { yylval.sVal = strdup(yytext); return MINUSONE;}
+"<<" { yylval.sVal = strdup(yytext); return SHIFTLEFT;}
+">>" { yylval.sVal = strdup(yytext); return SHIFTRIGHT;}
+">=" { yylval.sVal = strdup(yytext); return BIGOREQ;}
+"<=" { yylval.sVal = strdup(yytext); return SMALLEQ;}
+"==" { yylval.sVal = strdup(yytext); return EQ;}
+"!=" { yylval.sVal = strdup(yytext); return NOTEQ;}
+"&&" { yylval.sVal = strdup(yytext); return LOGICALAND;}
+"||" { yylval.sVal = strdup(yytext); return LOGICALOR;}
 {TWOOP} {
     if(tokenOn==1){
         if(firstLine==1){
@@ -176,6 +185,17 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
 
 "=" { yylval.sVal = strdup(yytext); return ASSIGN;}
 "*" { yylval.sVal = strdup(yytext); return MULSTAR;}
+"-" { yylval.sVal = strdup(yytext); return MINUS;}
+"+" { yylval.sVal = strdup(yytext); return ADD;}
+"~" { yylval.sVal = strdup(yytext); return TILDA;}
+"!" { yylval.sVal = strdup(yytext); return EXCLAMATION;}
+"&" { yylval.sVal = strdup(yytext); return BITWISEAND;}
+"/" { yylval.sVal = strdup(yytext); return SLASH;}
+"%" { yylval.sVal = strdup(yytext); return MOD;}
+">" { yylval.sVal = strdup(yytext); return BIG;}
+"<" { yylval.sVal = strdup(yytext); return SMALL;}
+"^" { yylval.sVal = strdup(yytext); return XOR;}
+"|" { yylval.sVal = strdup(yytext); return BITWISEOR;}
 
 {ONEOP} {
     if(tokenOn==1){

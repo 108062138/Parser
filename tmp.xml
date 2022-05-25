@@ -1,12 +1,15 @@
-int c = "asdfdf" + 'c';
-int a=5+3+6766;
-int* fnc(int a, char* d){
-//while(1){
-	//int a = 5;
-		//a = a + 2;
-		//}
-	//char c='2';
-	a = a+a*(a*2);
-	return a;
-
-}
+//int c = "asdfdf" + 'c';
+//int a=5+3+6766;
+//int* fnc(int a, char* d){
+////while(1){
+//	//int a = 5;
+//		//a = a + 2;
+//		//}
+//	//char c='2';
+//	a = a+a*(a*2);
+//	return a;
+//
+//}
+//char c = -'k';
+//int a=b;
+int a = --(5+fnc(1,k))++ * --3;
