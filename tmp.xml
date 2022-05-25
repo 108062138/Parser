@@ -12,4 +12,4 @@
 //}
 //char c = -'k';
 //int a=b;
-int a = --(5+fnc(1,k))++ * --3;
+int a = --k++;

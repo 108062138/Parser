@@ -34,7 +34,7 @@ OCT  ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7")
 HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C"|"D"|"E"|"F")
 
 %%
-(\-{NUMBER}+)|({NUMBER}+)|(\+{NUMBER}+)  {
+({NUMBER}+) {
     if(tokenOn==1){
         if(firstLine==1){
             //printf("#integer:%s", yytext);
@@ -47,7 +47,7 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
     yylval.iVal = atoi(yytext); 
     return INT;
 }
-(\+([0-9]+\.[0-9]*))|([0-9]+\.[0-9]*)|(\-([0-9]+\.[0-9]*)|(\.[0-9]+)|(\+\.[0-9]+)|(\-\.[0-9]+))  {
+([0-9]+\.[0-9]*)|(\.[0-9]+)  {
     if(tokenOn==1){
         if(firstLine==1){
             //printf("#f");
@@ -166,7 +166,7 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
 "<<" { yylval.sVal = strdup(yytext); return SHIFTLEFT;}
 ">>" { yylval.sVal = strdup(yytext); return SHIFTRIGHT;}
 ">=" { yylval.sVal = strdup(yytext); return BIGOREQ;}
-"<=" { yylval.sVal = strdup(yytext); return SMALLEQ;}
+"<=" { yylval.sVal = strdup(yytext); return SMALLOREQ;}
 "==" { yylval.sVal = strdup(yytext); return EQ;}
 "!=" { yylval.sVal = strdup(yytext); return NOTEQ;}
 "&&" { yylval.sVal = strdup(yytext); return LOGICALAND;}
@@ -266,6 +266,9 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
     }
     strcat(dest,yytext);
 }
+
+"NULL" {yylval.sVal = strdup(yytext); return MYNULL;}
+
 {MACRO}   {
     if(tokenOn==1){
         if(firstLine==1){
