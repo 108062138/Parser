@@ -3,6 +3,5 @@ compile: scanner.l parser.y
 	byacc -d parser.y
 	gcc -o parser lex.yy.c y.tab.c -lfl
 	yacc -v parser.y 
-	./parser < ./test.c
 all: 
 	compile

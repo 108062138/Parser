@@ -52,6 +52,14 @@ char* reserveStr(){
 //KEY GRAM..
 %token <sVal> RETURN BREAK CONTINUE FOR WHILE DO SWITCH CASE DEFAULT IF ELSE
 %token <sVal> IDENT
+
+%left INT
+%left MYCHAR MYSTRING MYNULL
+%left DOUBLE
+%left INTTYPE CHARTYPE STRINGTYPE DOUBLETYPE FLOATTYPE CONSTTYPE SIGNEDTYPE UNSIGNEDTYPE LONGLONGTYPE LONGTYPE SHORTTYPE VOIDTYPE
+%left RETURN BREAK CONTINUE FOR WHILE DO SWITCH CASE DEFAULT IF ELSE
+%left IDENT
+
 //OPER VALUE
 //ORDER 14
 %token<sVal> ASSIGN
@@ -94,6 +102,7 @@ char* reserveStr(){
 %left ADD MINUS TILDA EXCLAMATION BITWISEAND MULSTAR
 %left ADDONE MINUSONE
 %left COMMA EOL LSQUAREBRACKET RSQUAREBRACKET LBRACE RBRACE LPARENTHESIS RPARENTHESIS COLON
+%left TURNEDLEFT
 %right TURNEDRIGHT
 %nonassoc NOASSOCIATIVE
 
@@ -101,17 +110,19 @@ char* reserveStr(){
 %type <sVal> arrayDeclare lrSquareBracketList giveArray arrayContent item itemList array arrayList
 %type <sVal> functionDeclare parameters parameter parameterList functionDefinition
 %type <sVal> compoundStmt stmtOrVarDeclares stmtOrVarDeclare
-%type <sVal> stmt ifOrIfElseStmt switchStmt whileStmt forStmt returnBreakContinueStmt switchCluses switchClue stmts
-%type <sVal> mayHaveExpr
-%type <sVal> expr identOrArray opMid prefixOp suffixOp contiExpr exprList
+%type <sVal> stmt ifOrIfElseStmt switchStmt whileStmt forStmt returnBreakContinueStmt switchCluses switchClue stmts mayHaveElse
+%type <sVal> mayHaveExpr element
+%type <sVal> expr identOrArray /*opMid prefixOp suffixOp*/ contiExpr exprList
 %type <sVal> top
 %start startHere
 
 %%
 //main
 startHere: top {printf("%s",$1);};
-top: scalarDeclare {$$=$1;} | arrayDeclare {$$=$1;} | functionDeclare {$$=$1;} | functionDefinition {$$=$1;} | expr {$$=$1;} | stmt {$$=$1;};
-//scalar declare
+top: scalarDeclare top {char* s = malloc(sizeof(char)*(strlen($1)+strlen($2)+20)); strcpy(s,""); strcat(s,$1); strcat(s,$2); $$=s;} | 
+arrayDeclare top       {char* s = malloc(sizeof(char)*(strlen($1)+strlen($2)+20)); strcpy(s,""); strcat(s,$1); strcat(s,$2); $$=s;} | 
+functionDeclare top    {char* s = malloc(sizeof(char)*(strlen($1)+strlen($2)+20)); strcpy(s,""); strcat(s,$1); strcat(s,$2); $$=s;} | 
+functionDefinition top {char* s = malloc(sizeof(char)*(strlen($1)+strlen($2)+20)); strcpy(s,""); strcat(s,$1); strcat(s,$2); $$=s;} | {$$="";};
 scalarDeclare: type ident identList EOL {
     char* s = reserveStr(); 
     strcat(s,_SCALAR_LEFT);
@@ -178,54 +189,86 @@ arrayContent: LBRACE item itemList RBRACE {
 itemList: COMMA item itemList {char* s = reserveStr(); strcat(s,$1); strcat(s,$2); strcat(s,$3); $$=s;}| {$$="";};
 item: expr {$$=$1;} | arrayContent {$$=$1;};
 
-expr: identOrArray {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
-      INT          {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,intToString($1));    strcat(s,_EXPR_RIGHT);$$=s;} | 
-      DOUBLE       {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,doubleToString($1)); strcat(s,_EXPR_RIGHT);$$=s;} | 
-      MYCHAR       {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
-      MYSTRING     {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
-      MYNULL       {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,"0");                strcat(s,_EXPR_RIGHT);$$=s;} |
-      LPARENTHESIS expr RPARENTHESIS {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
-      expr opMid expr {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
-      prefixOp expr   {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; |
-      expr suffixOp   {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; |
-      LPARENTHESIS type RPARENTHESIS expr {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
-      LPARENTHESIS MULSTAR type RPARENTHESIS expr {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,$5); strcat(s,_EXPR_RIGHT); $$=s;} |
-      IDENT LPARENTHESIS contiExpr RPARENTHESIS   {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
-      BITWISEAND expr {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;} |
-      MULSTAR expr    {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;};
+expr:   identOrArray                                  {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
+        INT                                           {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,intToString($1));    strcat(s,_EXPR_RIGHT);$$=s;} | 
+        DOUBLE                                        {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,doubleToString($1)); strcat(s,_EXPR_RIGHT);$$=s;} | 
+        MYCHAR                                        {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
+        MYSTRING                                      {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
+        MYNULL                                        {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,"0");                strcat(s,_EXPR_RIGHT);$$=s;} |
+        LPARENTHESIS expr RPARENTHESIS                {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr ADD        expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr MINUS      expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr MULSTAR    expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr SLASH      expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr MOD        expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr SHIFTLEFT  expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr SHIFTRIGHT expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr BIG        expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr BIGOREQ    expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr SMALL      expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr SMALLOREQ  expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr EQ         expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr NOTEQ      expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr XOR        expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr BITWISEOR  expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr BITWISEAND expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr LOGICALOR  expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr LOGICALAND expr %prec TURNEDLEFT         {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        expr ASSIGN     expr %prec TURNEDRIGHT        {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        
+        expr ADDONE      %prec TURNEDRIGHT       {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr MINUSONE    %prec TURNEDRIGHT       {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr ADD         %prec NOASSOCIATIVE     {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr MINUS       %prec NOASSOCIATIVE     {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr TILDA       %prec TURNEDRIGHT       {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr EXCLAMATION %prec TURNEDRIGHT       {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr BITWISEAND  %prec TURNEDRIGHT       {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
+        expr MULSTAR     %prec TURNEDRIGHT       {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        ADDONE   expr    %prec TURNEDLEFT        {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        MINUSONE expr    %prec TURNEDLEFT        {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        LPARENTHESIS type RPARENTHESIS expr           {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
+        LPARENTHESIS MULSTAR type RPARENTHESIS expr   {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,$5); strcat(s,_EXPR_RIGHT); $$=s;} |
+        element LPARENTHESIS contiExpr RPARENTHESIS      {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
+        IDENT LPARENTHESIS contiExpr RPARENTHESIS        {char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,_EXPR_RIGHT); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
+        BITWISEAND expr                               %prec TURNEDRIGHT{char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;} |
+        MULSTAR expr                                  %prec TURNEDRIGHT{char* s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;};
 contiExpr: expr exprList{char* s = reserveStr(); strcat(s,$1); strcat(s,$2); $$=s;} | {$$="";};
 exprList: COMMA expr exprList {char* s = reserveStr(); strcat(s,$1); strcat(s,$2); strcat(s,$3); $$=s;} | {$$="";};
 identOrArray: IDENT lrSquareBracketList {char* s = reserveStr(); strcat(s,$1); strcat(s,$2);$$=s;};
-
-opMid: ADD                         {$$=$1;} | 
-       MINUS                       {$$=$1;} | 
-       MULSTAR                     {$$=$1;} | 
-       SLASH                       {$$=$1;} |
-       MOD                         {$$=$1;} |
-       SHIFTLEFT                   {$$=$1;} |
-       SHIFTRIGHT                  {$$=$1;} |
-       BIG                         {$$=$1;} |
-       BIGOREQ                     {$$=$1;} |
-       SMALL                       {$$=$1;} |
-       SMALLOREQ                   {$$=$1;} |
-       EQ                          {$$=$1;} |
-       NOTEQ                       {$$=$1;} |
-       XOR                         {$$=$1;} |
-       BITWISEOR                   {$$=$1;} |
-       BITWISEAND                  {$$=$1;} |
-       LOGICALOR                   {$$=$1;} |
-       LOGICALAND                  {$$=$1;} |
-       ASSIGN     %prec TURNEDRIGHT{$$=$1;};
-prefixOp: ADDONE      %prec TURNEDRIGHT   {$$=$1;} | 
-          MINUSONE    %prec TURNEDRIGHT   {$$=$1;} | 
-          ADD         %prec NOASSOCIATIVE {$$=$1;} | 
-          MINUS       %prec NOASSOCIATIVE {$$=$1;} | 
-          TILDA       %prec TURNEDRIGHT   {$$=$1;} | 
-          EXCLAMATION %prec TURNEDRIGHT   {$$=$1;} | 
-          BITWISEAND  %prec TURNEDRIGHT   {$$=$1;} | 
-          MULSTAR     %prec TURNEDRIGHT   {$$=$1;};
-suffixOp: ADDONE   {$$=$1;} | 
-          MINUSONE {$$=$1;};
+element:    INT      {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,intToString($1));    strcat(s,_EXPR_RIGHT);$$=s;} | 
+            DOUBLE   {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,doubleToString($1)); strcat(s,_EXPR_RIGHT);$$=s;} | 
+            MYCHAR   {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
+            MYSTRING {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,$1);                 strcat(s,_EXPR_RIGHT);$$=s;} | 
+            MYNULL   {char*s = reserveStr(); strcat(s,_EXPR_LEFT); strcat(s,"0");                 strcat(s,_EXPR_RIGHT);$$=s;};
+//opMid: ADD                         {$$=$1;} | 
+//       MINUS                       {$$=$1;} | 
+//       MULSTAR                     {$$=$1;} | 
+//       SLASH                       {$$=$1;} |
+//       MOD                         {$$=$1;} |
+//       SHIFTLEFT                   {$$=$1;} |
+//       SHIFTRIGHT                  {$$=$1;} |
+//       BIG                         {$$=$1;} |
+//       BIGOREQ                     {$$=$1;} |
+//       SMALL                       {$$=$1;} |
+//       SMALLOREQ                   {$$=$1;} |
+//       EQ                          {$$=$1;} |
+//       NOTEQ                       {$$=$1;} |
+//       XOR                         {$$=$1;} |
+//       BITWISEOR                   {$$=$1;} |
+//       BITWISEAND                  {$$=$1;} |
+//       LOGICALOR                   {$$=$1;} |
+//       LOGICALAND                  {$$=$1;} |
+//       ASSIGN     %prec TURNEDRIGHT{$$=$1;};
+//prefixOp: ADDONE      %prec TURNEDRIGHT   {$$=$1;} | 
+//          MINUSONE    %prec TURNEDRIGHT   {$$=$1;} | 
+//          ADD         %prec NOASSOCIATIVE {$$=$1;} | 
+//          MINUS       %prec NOASSOCIATIVE {$$=$1;} | 
+//          TILDA       %prec TURNEDRIGHT   {$$=$1;} | 
+//          EXCLAMATION %prec TURNEDRIGHT   {$$=$1;} | 
+//          BITWISEAND  %prec TURNEDRIGHT   {$$=$1;} | 
+//          MULSTAR     %prec TURNEDRIGHT   {$$=$1;};
+//suffixOp: ADDONE   {$$=$1;} | 
+//          MINUSONE {$$=$1;};
 
 functionDeclare: type IDENT LPARENTHESIS parameters RPARENTHESIS EOL {
     char* s = reserveStr(); 
@@ -343,8 +386,11 @@ switchCluses: switchClue switchCluses {
 switchClue: CASE expr COLON stmts{char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);strcat(s,$4);$$=s;} | 
             DEFAULT COLON stmts  {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);$$=s;};
 stmts: stmt stmts {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);$$=s;}| {$$="";};
-ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS compoundStmt   {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);strcat(s,$4);strcat(s,$5);$$=s;} |
-IF LPARENTHESIS expr RPARENTHESIS compoundStmt ELSE compoundStmt {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);strcat(s,$4);strcat(s,$5);strcat(s,$6);strcat(s,$7);$$=s;};
+//ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS compoundStmt   {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);strcat(s,$4);strcat(s,$5);$$=s;} |
+//IF LPARENTHESIS expr RPARENTHESIS compoundStmt ELSE compoundStmt {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);strcat(s,$4);strcat(s,$5);strcat(s,$6);strcat(s,$7);$$=s;};
+
+ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS compoundStmt mayHaveElse {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);strcat(s,$3);strcat(s,$4);strcat(s,$5); strcat(s,$6);$$=s;};
+mayHaveElse: ELSE compoundStmt {char* s = reserveStr(); strcat(s,$1);strcat(s,$2);$$=s;} | {$$="";};
 %%
 int yylex();
 int main(void) {

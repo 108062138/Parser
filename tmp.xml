@@ -12,4 +12,11 @@
 //}
 //char c = -'k';
 //int a=b;
-int a = --k++;
+
+int fnc(int *a, char b){
+if (e1){
+if (e2){
+s1;
+}
+}else {s2;}
+}
