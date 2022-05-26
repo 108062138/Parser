@@ -171,17 +171,6 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
 "!=" { yylval.sVal = strdup(yytext); return NOTEQ;}
 "&&" { yylval.sVal = strdup(yytext); return LOGICALAND;}
 "||" { yylval.sVal = strdup(yytext); return LOGICALOR;}
-{TWOOP} {
-    if(tokenOn==1){
-        if(firstLine==1){
-            firstLine=0;
-            //printf("#op:%s",yytext);
-        }else {
-            //printf("\n#op:%s",yytext);
-        }
-    }
-    strcat(dest,yytext);
-}
 
 "=" { yylval.sVal = strdup(yytext); return ASSIGN;}
 "*" { yylval.sVal = strdup(yytext); return MULSTAR;}
@@ -196,18 +185,6 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
 "<" { yylval.sVal = strdup(yytext); return SMALL;}
 "^" { yylval.sVal = strdup(yytext); return XOR;}
 "|" { yylval.sVal = strdup(yytext); return BITWISEOR;}
-
-{ONEOP} {
-    if(tokenOn==1){
-        if(firstLine==1){
-            firstLine=0;
-            //printf("#op:%s",yytext);
-        }else {
-            //printf("\n#op:%s",yytext);
-        }
-    }
-    strcat(dest,yytext);
-}
 
 "int" { yylval.sVal = strdup(yytext); return INTTYPE;}
 "char" { yylval.sVal = strdup(yytext); return CHARTYPE;}
