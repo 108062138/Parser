@@ -7,8 +7,8 @@ END='\033[0m';
 
 
 for FILE in ./testcases/*;do
-./scanner < $FILE > MYOUTPUT.txt;
-golden_scanner < $FILE > GOLDENOUTPUT.txt;
+./parser < $FILE > MYOUTPUT.txt;
+golden_parser < $FILE > GOLDENOUTPUT.txt;
 echo $FILE;
 diff MYOUTPUT.txt GOLDENOUTPUT.txt
 #DIFF=$(diff MYOUTPUT.txt GOLDENOUTPUT.txt);
