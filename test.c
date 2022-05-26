@@ -1,3 +1,4 @@
+int a = *fnc(1,2,3)++;
 int main(){
 	int a ,k =a = b = 13 = 'a' = 12.55 = c = 3 = 6=7;
 	D = A = 1 = 4 = c = *p++;
@@ -5,6 +6,7 @@ int main(){
 	a = a;
 	int a = *p++;
 	a = --++++(b+c-d+f-"strdfdffddf"(1,2,3,4,5,65))*12+1314&14%(15+16)*17/(19+18);
+	a = 5;
 }
 int* fm(int a, char b, double c, const char d, float f, const long long g, int* ptr1, char* ptr2){
 	a = --++++(b+c-d+f-"strdfdffddf"(1,2,3,4,5,65))*12+1314&14%(15+16)*17/(19+18);
@@ -14,7 +16,7 @@ int* fm(int a, char b, double c, const char d, float f, const long long g, int* 
 		if(345435){
 			char k=6;
 			if(jack){float dc;}
-			if(amyLove){double haha;}
+			if(Love){double haha;}
 			while(s){
 				if(s){
 					int k;
@@ -27,13 +29,13 @@ int* fm(int a, char b, double c, const char d, float f, const long long g, int* 
 		}
 	}
 	while(1){
-		//int test;
-		//double grid[5][79898]={1,3,5}, solar[10]['a'], kkkk[7], rar[232432][234][343][858799]={{1},{3,5},{7,{0,777,{'a','f','k'},0}},{9}};
-        //int a,b,c,d,d,fe,fe,fefe,dfg;
-        
-		//a = (int) fnc;
-		//a = (double) fnc;
-		//a = (const char) fnc;
+		int test;
+		double grid[5][79898]={1,3,5}, solar[10]['a'], kkkk[7], rar[232432][234][343][858799]={{1},{3,5},{7,{0,777,{'a','f','k'},0}},{9}};
+        int a,b,c,d,d,fe,fe,fefe,dfg;
+
+		a = (int) fnc;
+		a = (double) fnc;
+		a = (const char) fnc;
 	}
 	while(sfdfd){
 		break;
