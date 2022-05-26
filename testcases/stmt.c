@@ -1,14 +1,10 @@
-int main(){
-	(a+b)(c+d) = ac+ad+bc+bd;
-	int a = FNC(232);
-	for(i=0;i<5;i++){
-        i = k;
-    }
-}
-/*int a = *fnc(1,2,3)++;
+int a = *fnc(1,2,3)++;
 int a; 
 int b,c,D,f; int arr[14],a[1][2][4];
 int main(){
+    for(int i=0;i<5;i++){
+        printf("%d",i);
+    }
 	int a ,k =a = b = 13 = 'a' = 12.55 = c = 3 = 6=7;
 	D = A = 1 = 4 = c = *p++;
 	a = -2+3;
@@ -70,4 +66,3 @@ int* fm(int a, char b, double c, const char d, float f, const long long g, int* 
 	}
 	return 0;
 }
-*/

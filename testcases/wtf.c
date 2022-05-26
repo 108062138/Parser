@@ -4,6 +4,6 @@
 /* IF YOU ARE THE CHOSEN ONE, IGNORE THE AFOREMENTIONED COMMENT AND BRAVELY DECOMMENT ALL OF THEM */
 int main(){
 /*CASE 00*/
-//(a+b)(c+d) = ac+ad+bc+bd;
+(a+b)(c+d) = ac+ad+bc+bd;
 
 }
