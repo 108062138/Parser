@@ -1,5 +1,6 @@
 int main(){
-	(a+b)(c+d) = ac+ad+bc+bd;
+	//(a+b)(c+d) = ac+ad+bc+bd;
+	int a = FNC(232);
 }
 /*int a = *fnc(1,2,3)++;
 int a; 

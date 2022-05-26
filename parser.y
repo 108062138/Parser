@@ -278,6 +278,7 @@ expr:   identOrArray                                  %prec LV0_L   {char*s = re
 
         expr ADDONE                                   %prec LV1   {char* s = reserveStr(strlen($1)); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; | 
         expr MINUSONE                                 %prec LV1   {char* s = reserveStr(strlen($1)); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,_EXPR_RIGHT); $$=s;}; |
+        //expr LPARENTHESIS expr RPARENTHESIS           %prec LV1   {char* s = reserveStr(strlen($1)+strlen($2)+strlen($3)+strlen($4)); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
         element LPARENTHESIS contiExpr RPARENTHESIS   %prec LV1   {char* s = reserveStr(strlen($1)+strlen($2)+strlen($3)+strlen($4)); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
         IDENT LPARENTHESIS contiExpr RPARENTHESIS     %prec LV1   {char* s = reserveStr(strlen($1)+strlen($2)+strlen($3)+strlen($4)); strcat(s,_EXPR_LEFT); strcat(s,_EXPR_LEFT); strcat(s,$1); strcat(s,_EXPR_RIGHT); strcat(s,$2); strcat(s,$3); strcat(s,$4); strcat(s,_EXPR_RIGHT); $$=s;} |
 
