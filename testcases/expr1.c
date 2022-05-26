@@ -13,9 +13,11 @@ int main(){
     ---!--&k;
     char* str = (123)+(((((((((((!(df/ddd==gf)*(dfd)/(dfdsd+dfd)+(((((((12/1((2/2-ddfd(dfdf,dsfd,dfd,123,565,3434))+13+dfd)+'a'))))))))))))))))))*(df+Dfd);
     (char)(arr[343][dfd]==fgfg);
-    (char)arr[343][dfd]==fgfg;
+    (char*)(arr[343][dfd]==fgfg);
+    (const int*)"dfd"(1234,4545,'\n');
+    (const int*)NULL(1234,4545,'\n');
     int a = fdsfddf(dfd<<rec(rec(rec(rec(rec(rec(rec(dfd)/(dsdd)--))))))<<dfd<<dfddf<<dfddf<<!efee<<dfd<12);
     //exp = – dfd;// -- < <= > >= == != = && || ! ~ ^ & | >> << [ ] ( )
     exp = -------------++++++++++++++++++++++++++-------------------------- bvddfd----------------------------------------------------------------++++++++++++++++--------;
-    
+    a = a ||d|c&&d|f&f;
 }

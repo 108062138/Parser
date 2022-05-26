@@ -1,0 +1,5266 @@
+Terminals unused in grammar
+
+   STRINGTYPE
+   TURNEDLEFT
+   TURNEDRIGHT
+   NOASSOCIATIVE
+   LV13
+   LV12
+   LV11
+   LV10
+   LV9
+   LV8
+   LV7
+   LV6
+   LV5
+   LV4
+   LV0_N
+   LV0_R
+   PREC15_LEFT
+   PREC15_NON
+   PREC15_RIGHT
+   PREC14_LEFT
+   PREC14_NON
+   PREC14_RIGHT
+   PREC13_LEFT
+   PREC13_NON
+   PREC13_RIGHT
+   PREC12_LEFT
+   PREC12_NON
+   PREC12_RIGHT
+   PREC11_LEFT
+   PREC11_NON
+   PREC11_RIGHT
+   PREC10_LEFT
+   PREC10_NON
+   PREC10_RIGHT
+   PREC09_LEFT
+   PREC09_NON
+   PREC09_RIGHT
+   PREC08_LEFT
+   PREC08_NON
+   PREC08_RIGHT
+   PREC07_LEFT
+   PREC07_NON
+   PREC07_RIGHT
+   PREC06_LEFT
+   PREC06_NON
+   PREC06_RIGHT
+   PREC05_LEFT
+   PREC05_NON
+   PREC05_RIGHT
+   PREC04_LEFT
+   PREC04_NON
+   PREC04_RIGHT
+   PREC03_LEFT
+   PREC03_NON
+   PREC03_RIGHT
+   PREC02_LEFT
+   PREC02_NON
+   PREC02_RIGHT
+   PREC01_LEFT
+   PREC01_NON
+   PREC01_RIGHT
+   PREC00_LEFT
+   PREC00_NON
+   PREC00_RIGHT
+
+
+Grammar
+
+    0 $accept: startHere $end
+
+    1 startHere: top
+
+    2 top: scalarDeclare top
+    3    | arrayDeclare top
+    4    | functionDeclare top
+    5    | functionDefinition top
+    6    | %empty
+
+    7 scalarDeclare: type ident identList EOL
+
+    8 identList: COMMA ident identList
+    9          | %empty
+
+   10 ident: MULSTAR id
+   11      | id
+
+   12 id: IDENT giveScalar
+
+   13 giveScalar: ASSIGN expr
+   14           | %empty
+
+   15 type: type1
+   16     | type2
+   17     | type3
+   18     | type4
+
+   19 type1: mayHaveConst mayHaveSign mayLongOrShort INTTYPE
+
+   20 type2: mayHaveConst mayHaveSign LONGLONGTYPE
+   21      | mayHaveConst mayHaveSign LONGTYPE
+   22      | mayHaveConst mayHaveSign SHORTTYPE
+   23      | mayHaveConst mayHaveSign CHARTYPE
+
+   24 type3: mayHaveConst SIGNEDTYPE
+   25      | mayHaveConst UNSIGNEDTYPE
+   26      | mayHaveConst FLOATTYPE
+   27      | mayHaveConst DOUBLETYPE
+   28      | mayHaveConst VOIDTYPE
+
+   29 type4: CONSTTYPE
+
+   30 mayHaveConst: CONSTTYPE
+   31             | %empty
+
+   32 mayHaveSign: SIGNEDTYPE
+   33            | UNSIGNEDTYPE
+   34            | %empty
+
+   35 mayLongOrShort: LONGLONGTYPE
+   36               | LONGTYPE
+   37               | SHORTTYPE
+   38               | %empty
+
+   39 arrayDeclare: type array arrayList EOL
+
+   40 array: IDENT LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList giveArray
+
+   41 arrayList: COMMA array arrayList
+   42          | %empty
+
+   43 lrSquareBracketList: LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList
+   44                    | %empty
+
+   45 giveArray: ASSIGN arrayContent
+   46          | %empty
+
+   47 arrayContent: LBRACE item itemList RBRACE
+   48             | %empty
+
+   49 itemList: COMMA item itemList
+   50         | %empty
+
+   51 item: expr
+   52     | arrayContent
+
+   53 expr: identOrArray
+   54     | INT
+   55     | DOUBLE
+   56     | MYCHAR
+   57     | MYSTRING
+   58     | MYNULL
+   59     | LPARENTHESIS expr RPARENTHESIS
+   60     | expr ADDONE
+   61     | expr MINUSONE
+   62     | element LPARENTHESIS contiExpr RPARENTHESIS
+   63     | IDENT LPARENTHESIS contiExpr RPARENTHESIS
+   64     | BITWISEAND expr
+   65     | MULSTAR expr
+   66     | TILDA expr
+   67     | EXCLAMATION expr
+   68     | ADD expr
+   69     | MINUS expr
+   70     | ADDONE expr
+   71     | MINUSONE expr
+   72     | LPARENTHESIS type MULSTAR RPARENTHESIS expr
+   73     | LPARENTHESIS type RPARENTHESIS expr
+   74     | expr MULSTAR expr
+   75     | expr SLASH expr
+   76     | expr MOD expr
+   77     | expr ADD expr
+   78     | expr MINUS expr
+   79     | expr SHIFTLEFT expr
+   80     | expr SHIFTRIGHT expr
+   81     | expr BIG expr
+   82     | expr BIGOREQ expr
+   83     | expr SMALL expr
+   84     | expr SMALLOREQ expr
+   85     | expr EQ expr
+   86     | expr NOTEQ expr
+   87     | expr BITWISEAND expr
+   88     | expr XOR expr
+   89     | expr BITWISEOR expr
+   90     | expr LOGICALAND expr
+   91     | expr LOGICALOR expr
+   92     | expr ASSIGN expr
+
+   93 contiExpr: expr exprList
+   94          | %empty
+
+   95 exprList: COMMA expr exprList
+   96         | %empty
+
+   97 identOrArray: IDENT lrSquareBracketList
+
+   98 element: INT
+   99        | DOUBLE
+  100        | MYCHAR
+  101        | MYSTRING
+  102        | MYNULL
+
+  103 functionDeclare: type IDENT LPARENTHESIS parameters RPARENTHESIS EOL
+  104                | type MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS EOL
+
+  105 parameters: parameter parameterList
+  106           | %empty
+
+  107 parameterList: COMMA parameter parameterList
+  108              | %empty
+
+  109 parameter: type IDENT
+  110          | type MULSTAR IDENT
+
+  111 functionDefinition: type IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt
+  112                   | type MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt
+
+  113 compoundStmt: LBRACE stmtOrVarDeclares RBRACE
+
+  114 stmtOrVarDeclares: stmtOrVarDeclare stmtOrVarDeclares
+  115                  | %empty
+
+  116 stmtOrVarDeclare: stmt
+  117                 | scalarDeclare
+  118                 | arrayDeclare
+
+  119 stmt: expr EOL
+  120     | ifOrIfElseStmt
+  121     | switchStmt
+  122     | whileStmt
+  123     | forStmt
+  124     | returnBreakContinueStmt
+  125     | compoundStmt
+
+  126 returnBreakContinueStmt: RETURN expr EOL
+  127                        | RETURN EOL
+  128                        | BREAK EOL
+  129                        | CONTINUE EOL
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL mayHaveExpr EOL mayHaveExpr RPARENTHESIS stmt
+
+  131 mayHaveExpr: expr
+  132            | %empty
+
+  133 whileStmt: WHILE LPARENTHESIS expr RPARENTHESIS stmt
+  134          | DO stmt WHILE LPARENTHESIS expr RPARENTHESIS EOL
+
+  135 switchStmt: SWITCH LPARENTHESIS expr RPARENTHESIS LBRACE switchCluses RBRACE
+
+  136 switchCluses: switchClue switchCluses
+  137             | %empty
+
+  138 switchClue: CASE expr COLON stmts
+  139           | DEFAULT COLON stmts
+
+  140 stmts: stmt stmts
+  141      | %empty
+
+  142 ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS compoundStmt mayHaveElse
+
+  143 mayHaveElse: ELSE compoundStmt
+  144            | %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT (258) 54 98
+MYCHAR (259) 56 100
+MYSTRING (260) 57 101
+MYNULL (261) 58 102
+DOUBLE (262) 55 99
+INTTYPE (263) 19
+CHARTYPE (264) 23
+STRINGTYPE (265)
+DOUBLETYPE (266) 27
+FLOATTYPE (267) 26
+CONSTTYPE (268) 29 30
+SIGNEDTYPE (269) 24 32
+UNSIGNEDTYPE (270) 25 33
+LONGLONGTYPE (271) 20 35
+LONGTYPE (272) 21 36
+SHORTTYPE (273) 22 37
+VOIDTYPE (274) 28
+RETURN (275) 126 127
+BREAK (276) 128
+CONTINUE (277) 129
+FOR (278) 130
+WHILE (279) 133 134
+DO (280) 134
+SWITCH (281) 135
+CASE (282) 138
+DEFAULT (283) 139
+IF (284) 142
+ELSE (285) 143
+IDENT (286) 12 40 63 97 103 104 109 110 111 112
+ASSIGN (287) 13 45 92
+LOGICALOR (288) 91
+LOGICALAND (289) 90
+BITWISEOR (290) 89
+XOR (291) 88
+EQ (292) 85
+NOTEQ (293) 86
+BIGOREQ (294) 82
+SMALLOREQ (295) 84
+BIG (296) 81
+SMALL (297) 83
+SHIFTLEFT (298) 79
+SHIFTRIGHT (299) 80
+SLASH (300) 75
+MOD (301) 76
+ADD (302) 68 77
+MINUS (303) 69 78
+TILDA (304) 66
+EXCLAMATION (305) 67
+BITWISEAND (306) 64 87
+MULSTAR (307) 10 65 72 74 104 110 112
+ADDONE (308) 60 70
+MINUSONE (309) 61 71
+COMMA (310) 8 41 49 95 107
+EOL (311) 7 39 103 104 119 126 127 128 129 130 134
+LSQUAREBRACKET (312) 40 43
+RSQUAREBRACKET (313) 40 43
+LBRACE (314) 47 113 135
+RBRACE (315) 47 113 135
+LPARENTHESIS (316) 59 62 63 72 73 103 104 111 112 130 133 134 135 142
+RPARENTHESIS (317) 59 62 63 72 73 103 104 111 112 130 133 134 135 142
+COLON (318) 138 139
+TURNEDLEFT (319)
+TURNEDRIGHT (320)
+NOASSOCIATIVE (321)
+LV13 (322)
+LV12 (323)
+LV11 (324)
+LV10 (325)
+LV9 (326)
+LV8 (327)
+LV7 (328)
+LV6 (329)
+LV5 (330)
+LV4 (331)
+LV3 (332)
+LV2 (333)
+LV1 (334)
+LV0_L (335)
+LV0_N (336)
+LV0_R (337)
+PREC15_LEFT (338)
+PREC15_NON (339)
+PREC15_RIGHT (340)
+PREC14_LEFT (341)
+PREC14_NON (342)
+PREC14_RIGHT (343)
+PREC13_LEFT (344)
+PREC13_NON (345)
+PREC13_RIGHT (346)
+PREC12_LEFT (347)
+PREC12_NON (348)
+PREC12_RIGHT (349)
+PREC11_LEFT (350)
+PREC11_NON (351)
+PREC11_RIGHT (352)
+PREC10_LEFT (353)
+PREC10_NON (354)
+PREC10_RIGHT (355)
+PREC09_LEFT (356)
+PREC09_NON (357)
+PREC09_RIGHT (358)
+PREC08_LEFT (359)
+PREC08_NON (360)
+PREC08_RIGHT (361)
+PREC07_LEFT (362)
+PREC07_NON (363)
+PREC07_RIGHT (364)
+PREC06_LEFT (365)
+PREC06_NON (366)
+PREC06_RIGHT (367)
+PREC05_LEFT (368)
+PREC05_NON (369)
+PREC05_RIGHT (370)
+PREC04_LEFT (371)
+PREC04_NON (372)
+PREC04_RIGHT (373)
+PREC03_LEFT (374)
+PREC03_NON (375)
+PREC03_RIGHT (376)
+PREC02_LEFT (377)
+PREC02_NON (378)
+PREC02_RIGHT (379)
+PREC01_LEFT (380)
+PREC01_NON (381)
+PREC01_RIGHT (382)
+PREC00_LEFT (383)
+PREC00_NON (384)
+PREC00_RIGHT (385)
+
+
+Nonterminals, with rules where they appear
+
+$accept (131)
+    on left: 0
+startHere (132)
+    on left: 1, on right: 0
+top (133)
+    on left: 2 3 4 5 6, on right: 1 2 3 4 5
+scalarDeclare (134)
+    on left: 7, on right: 2 117
+identList (135)
+    on left: 8 9, on right: 7 8
+ident (136)
+    on left: 10 11, on right: 7 8
+id (137)
+    on left: 12, on right: 10 11
+giveScalar (138)
+    on left: 13 14, on right: 12
+type (139)
+    on left: 15 16 17 18, on right: 7 39 72 73 103 104 109 110 111
+    112
+type1 (140)
+    on left: 19, on right: 15
+type2 (141)
+    on left: 20 21 22 23, on right: 16
+type3 (142)
+    on left: 24 25 26 27 28, on right: 17
+type4 (143)
+    on left: 29, on right: 18
+mayHaveConst (144)
+    on left: 30 31, on right: 19 20 21 22 23 24 25 26 27 28
+mayHaveSign (145)
+    on left: 32 33 34, on right: 19 20 21 22 23
+mayLongOrShort (146)
+    on left: 35 36 37 38, on right: 19
+arrayDeclare (147)
+    on left: 39, on right: 3 118
+array (148)
+    on left: 40, on right: 39 41
+arrayList (149)
+    on left: 41 42, on right: 39 41
+lrSquareBracketList (150)
+    on left: 43 44, on right: 40 43 97
+giveArray (151)
+    on left: 45 46, on right: 40
+arrayContent (152)
+    on left: 47 48, on right: 45 52
+itemList (153)
+    on left: 49 50, on right: 47 49
+item (154)
+    on left: 51 52, on right: 47 49
+expr (155)
+    on left: 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70
+    71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91
+    92, on right: 13 40 43 51 59 60 61 64 65 66 67 68 69 70 71 72 73
+    74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 95
+    119 126 131 133 134 135 138 142
+contiExpr (156)
+    on left: 93 94, on right: 62 63
+exprList (157)
+    on left: 95 96, on right: 93 95
+identOrArray (158)
+    on left: 97, on right: 53
+element (159)
+    on left: 98 99 100 101 102, on right: 62
+functionDeclare (160)
+    on left: 103 104, on right: 4
+parameters (161)
+    on left: 105 106, on right: 103 104 111 112
+parameterList (162)
+    on left: 107 108, on right: 105 107
+parameter (163)
+    on left: 109 110, on right: 105 107
+functionDefinition (164)
+    on left: 111 112, on right: 5
+compoundStmt (165)
+    on left: 113, on right: 111 112 125 142 143
+stmtOrVarDeclares (166)
+    on left: 114 115, on right: 113 114
+stmtOrVarDeclare (167)
+    on left: 116 117 118, on right: 114
+stmt (168)
+    on left: 119 120 121 122 123 124 125, on right: 116 130 133 134
+    140
+returnBreakContinueStmt (169)
+    on left: 126 127 128 129, on right: 124
+forStmt (170)
+    on left: 130, on right: 123
+mayHaveExpr (171)
+    on left: 131 132, on right: 130
+whileStmt (172)
+    on left: 133 134, on right: 122
+switchStmt (173)
+    on left: 135, on right: 121
+switchCluses (174)
+    on left: 136 137, on right: 135 136
+switchClue (175)
+    on left: 138 139, on right: 136
+stmts (176)
+    on left: 140 141, on right: 138 139 140
+ifOrIfElseStmt (177)
+    on left: 142, on right: 120
+mayHaveElse (178)
+    on left: 143 144, on right: 142
+
+
+State 0
+
+    0 $accept: . startHere $end
+
+    CONSTTYPE  shift, and go to state 1
+
+    $end      reduce using rule 6 (top)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    startHere           go to state 2
+    top                 go to state 3
+    scalarDeclare       go to state 4
+    type                go to state 5
+    type1               go to state 6
+    type2               go to state 7
+    type3               go to state 8
+    type4               go to state 9
+    mayHaveConst        go to state 10
+    arrayDeclare        go to state 11
+    functionDeclare     go to state 12
+    functionDefinition  go to state 13
+
+
+State 1
+
+   29 type4: CONSTTYPE .
+   30 mayHaveConst: CONSTTYPE .
+
+    IDENT         reduce using rule 29 (type4)
+    MULSTAR       reduce using rule 29 (type4)
+    RPARENTHESIS  reduce using rule 29 (type4)
+    $default      reduce using rule 30 (mayHaveConst)
+
+
+State 2
+
+    0 $accept: startHere . $end
+
+    $end  shift, and go to state 14
+
+
+State 3
+
+    1 startHere: top .
+
+    $default  reduce using rule 1 (startHere)
+
+
+State 4
+
+    2 top: scalarDeclare . top
+
+    CONSTTYPE  shift, and go to state 1
+
+    $end      reduce using rule 6 (top)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    top                 go to state 15
+    scalarDeclare       go to state 4
+    type                go to state 5
+    type1               go to state 6
+    type2               go to state 7
+    type3               go to state 8
+    type4               go to state 9
+    mayHaveConst        go to state 10
+    arrayDeclare        go to state 11
+    functionDeclare     go to state 12
+    functionDefinition  go to state 13
+
+
+State 5
+
+    7 scalarDeclare: type . ident identList EOL
+   39 arrayDeclare: type . array arrayList EOL
+  103 functionDeclare: type . IDENT LPARENTHESIS parameters RPARENTHESIS EOL
+  104                | type . MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS EOL
+  111 functionDefinition: type . IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt
+  112                   | type . MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt
+
+    IDENT    shift, and go to state 16
+    MULSTAR  shift, and go to state 17
+
+    ident  go to state 18
+    id     go to state 19
+    array  go to state 20
+
+
+State 6
+
+   15 type: type1 .
+
+    $default  reduce using rule 15 (type)
+
+
+State 7
+
+   16 type: type2 .
+
+    $default  reduce using rule 16 (type)
+
+
+State 8
+
+   17 type: type3 .
+
+    $default  reduce using rule 17 (type)
+
+
+State 9
+
+   18 type: type4 .
+
+    $default  reduce using rule 18 (type)
+
+
+State 10
+
+   19 type1: mayHaveConst . mayHaveSign mayLongOrShort INTTYPE
+   20 type2: mayHaveConst . mayHaveSign LONGLONGTYPE
+   21      | mayHaveConst . mayHaveSign LONGTYPE
+   22      | mayHaveConst . mayHaveSign SHORTTYPE
+   23      | mayHaveConst . mayHaveSign CHARTYPE
+   24 type3: mayHaveConst . SIGNEDTYPE
+   25      | mayHaveConst . UNSIGNEDTYPE
+   26      | mayHaveConst . FLOATTYPE
+   27      | mayHaveConst . DOUBLETYPE
+   28      | mayHaveConst . VOIDTYPE
+
+    DOUBLETYPE    shift, and go to state 21
+    FLOATTYPE     shift, and go to state 22
+    SIGNEDTYPE    shift, and go to state 23
+    UNSIGNEDTYPE  shift, and go to state 24
+    VOIDTYPE      shift, and go to state 25
+
+    $default  reduce using rule 34 (mayHaveSign)
+
+    mayHaveSign  go to state 26
+
+
+State 11
+
+    3 top: arrayDeclare . top
+
+    CONSTTYPE  shift, and go to state 1
+
+    $end      reduce using rule 6 (top)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    top                 go to state 27
+    scalarDeclare       go to state 4
+    type                go to state 5
+    type1               go to state 6
+    type2               go to state 7
+    type3               go to state 8
+    type4               go to state 9
+    mayHaveConst        go to state 10
+    arrayDeclare        go to state 11
+    functionDeclare     go to state 12
+    functionDefinition  go to state 13
+
+
+State 12
+
+    4 top: functionDeclare . top
+
+    CONSTTYPE  shift, and go to state 1
+
+    $end      reduce using rule 6 (top)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    top                 go to state 28
+    scalarDeclare       go to state 4
+    type                go to state 5
+    type1               go to state 6
+    type2               go to state 7
+    type3               go to state 8
+    type4               go to state 9
+    mayHaveConst        go to state 10
+    arrayDeclare        go to state 11
+    functionDeclare     go to state 12
+    functionDefinition  go to state 13
+
+
+State 13
+
+    5 top: functionDefinition . top
+
+    CONSTTYPE  shift, and go to state 1
+
+    $end      reduce using rule 6 (top)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    top                 go to state 29
+    scalarDeclare       go to state 4
+    type                go to state 5
+    type1               go to state 6
+    type2               go to state 7
+    type3               go to state 8
+    type4               go to state 9
+    mayHaveConst        go to state 10
+    arrayDeclare        go to state 11
+    functionDeclare     go to state 12
+    functionDefinition  go to state 13
+
+
+State 14
+
+    0 $accept: startHere $end .
+
+    $default  accept
+
+
+State 15
+
+    2 top: scalarDeclare top .
+
+    $default  reduce using rule 2 (top)
+
+
+State 16
+
+   12 id: IDENT . giveScalar
+   40 array: IDENT . LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList giveArray
+  103 functionDeclare: type IDENT . LPARENTHESIS parameters RPARENTHESIS EOL
+  111 functionDefinition: type IDENT . LPARENTHESIS parameters RPARENTHESIS compoundStmt
+
+    ASSIGN          shift, and go to state 30
+    LSQUAREBRACKET  shift, and go to state 31
+    LPARENTHESIS    shift, and go to state 32
+
+    $default  reduce using rule 14 (giveScalar)
+
+    giveScalar  go to state 33
+
+
+State 17
+
+   10 ident: MULSTAR . id
+  104 functionDeclare: type MULSTAR . IDENT LPARENTHESIS parameters RPARENTHESIS EOL
+  112 functionDefinition: type MULSTAR . IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt
+
+    IDENT  shift, and go to state 34
+
+    id  go to state 35
+
+
+State 18
+
+    7 scalarDeclare: type ident . identList EOL
+
+    COMMA  shift, and go to state 36
+
+    $default  reduce using rule 9 (identList)
+
+    identList  go to state 37
+
+
+State 19
+
+   11 ident: id .
+
+    $default  reduce using rule 11 (ident)
+
+
+State 20
+
+   39 arrayDeclare: type array . arrayList EOL
+
+    COMMA  shift, and go to state 38
+
+    $default  reduce using rule 42 (arrayList)
+
+    arrayList  go to state 39
+
+
+State 21
+
+   27 type3: mayHaveConst DOUBLETYPE .
+
+    $default  reduce using rule 27 (type3)
+
+
+State 22
+
+   26 type3: mayHaveConst FLOATTYPE .
+
+    $default  reduce using rule 26 (type3)
+
+
+State 23
+
+   24 type3: mayHaveConst SIGNEDTYPE .
+   32 mayHaveSign: SIGNEDTYPE .
+
+    IDENT         reduce using rule 24 (type3)
+    MULSTAR       reduce using rule 24 (type3)
+    RPARENTHESIS  reduce using rule 24 (type3)
+    $default      reduce using rule 32 (mayHaveSign)
+
+
+State 24
+
+   25 type3: mayHaveConst UNSIGNEDTYPE .
+   33 mayHaveSign: UNSIGNEDTYPE .
+
+    IDENT         reduce using rule 25 (type3)
+    MULSTAR       reduce using rule 25 (type3)
+    RPARENTHESIS  reduce using rule 25 (type3)
+    $default      reduce using rule 33 (mayHaveSign)
+
+
+State 25
+
+   28 type3: mayHaveConst VOIDTYPE .
+
+    $default  reduce using rule 28 (type3)
+
+
+State 26
+
+   19 type1: mayHaveConst mayHaveSign . mayLongOrShort INTTYPE
+   20 type2: mayHaveConst mayHaveSign . LONGLONGTYPE
+   21      | mayHaveConst mayHaveSign . LONGTYPE
+   22      | mayHaveConst mayHaveSign . SHORTTYPE
+   23      | mayHaveConst mayHaveSign . CHARTYPE
+
+    CHARTYPE      shift, and go to state 40
+    LONGLONGTYPE  shift, and go to state 41
+    LONGTYPE      shift, and go to state 42
+    SHORTTYPE     shift, and go to state 43
+
+    $default  reduce using rule 38 (mayLongOrShort)
+
+    mayLongOrShort  go to state 44
+
+
+State 27
+
+    3 top: arrayDeclare top .
+
+    $default  reduce using rule 3 (top)
+
+
+State 28
+
+    4 top: functionDeclare top .
+
+    $default  reduce using rule 4 (top)
+
+
+State 29
+
+    5 top: functionDefinition top .
+
+    $default  reduce using rule 5 (top)
+
+
+State 30
+
+   13 giveScalar: ASSIGN . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 60
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 31
+
+   40 array: IDENT LSQUAREBRACKET . expr RSQUAREBRACKET lrSquareBracketList giveArray
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 63
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 32
+
+  103 functionDeclare: type IDENT LPARENTHESIS . parameters RPARENTHESIS EOL
+  111 functionDefinition: type IDENT LPARENTHESIS . parameters RPARENTHESIS compoundStmt
+
+    CONSTTYPE  shift, and go to state 1
+
+    RPARENTHESIS  reduce using rule 106 (parameters)
+    $default      reduce using rule 31 (mayHaveConst)
+
+    type          go to state 64
+    type1         go to state 6
+    type2         go to state 7
+    type3         go to state 8
+    type4         go to state 9
+    mayHaveConst  go to state 10
+    parameters    go to state 65
+    parameter     go to state 66
+
+
+State 33
+
+   12 id: IDENT giveScalar .
+
+    $default  reduce using rule 12 (id)
+
+
+State 34
+
+   12 id: IDENT . giveScalar
+  104 functionDeclare: type MULSTAR IDENT . LPARENTHESIS parameters RPARENTHESIS EOL
+  112 functionDefinition: type MULSTAR IDENT . LPARENTHESIS parameters RPARENTHESIS compoundStmt
+
+    ASSIGN        shift, and go to state 30
+    LPARENTHESIS  shift, and go to state 67
+
+    $default  reduce using rule 14 (giveScalar)
+
+    giveScalar  go to state 33
+
+
+State 35
+
+   10 ident: MULSTAR id .
+
+    $default  reduce using rule 10 (ident)
+
+
+State 36
+
+    8 identList: COMMA . ident identList
+
+    IDENT    shift, and go to state 68
+    MULSTAR  shift, and go to state 69
+
+    ident  go to state 70
+    id     go to state 19
+
+
+State 37
+
+    7 scalarDeclare: type ident identList . EOL
+
+    EOL  shift, and go to state 71
+
+
+State 38
+
+   41 arrayList: COMMA . array arrayList
+
+    IDENT  shift, and go to state 72
+
+    array  go to state 73
+
+
+State 39
+
+   39 arrayDeclare: type array arrayList . EOL
+
+    EOL  shift, and go to state 74
+
+
+State 40
+
+   23 type2: mayHaveConst mayHaveSign CHARTYPE .
+
+    $default  reduce using rule 23 (type2)
+
+
+State 41
+
+   20 type2: mayHaveConst mayHaveSign LONGLONGTYPE .
+   35 mayLongOrShort: LONGLONGTYPE .
+
+    INTTYPE   reduce using rule 35 (mayLongOrShort)
+    $default  reduce using rule 20 (type2)
+
+
+State 42
+
+   21 type2: mayHaveConst mayHaveSign LONGTYPE .
+   36 mayLongOrShort: LONGTYPE .
+
+    INTTYPE   reduce using rule 36 (mayLongOrShort)
+    $default  reduce using rule 21 (type2)
+
+
+State 43
+
+   22 type2: mayHaveConst mayHaveSign SHORTTYPE .
+   37 mayLongOrShort: SHORTTYPE .
+
+    INTTYPE   reduce using rule 37 (mayLongOrShort)
+    $default  reduce using rule 22 (type2)
+
+
+State 44
+
+   19 type1: mayHaveConst mayHaveSign mayLongOrShort . INTTYPE
+
+    INTTYPE  shift, and go to state 75
+
+
+State 45
+
+   54 expr: INT .
+   98 element: INT .
+
+    LPARENTHESIS  reduce using rule 98 (element)
+    $default      reduce using rule 54 (expr)
+
+
+State 46
+
+   56 expr: MYCHAR .
+  100 element: MYCHAR .
+
+    LPARENTHESIS  reduce using rule 100 (element)
+    $default      reduce using rule 56 (expr)
+
+
+State 47
+
+   57 expr: MYSTRING .
+  101 element: MYSTRING .
+
+    LPARENTHESIS  reduce using rule 101 (element)
+    $default      reduce using rule 57 (expr)
+
+
+State 48
+
+   58 expr: MYNULL .
+  102 element: MYNULL .
+
+    LPARENTHESIS  reduce using rule 102 (element)
+    $default      reduce using rule 58 (expr)
+
+
+State 49
+
+   55 expr: DOUBLE .
+   99 element: DOUBLE .
+
+    LPARENTHESIS  reduce using rule 99 (element)
+    $default      reduce using rule 55 (expr)
+
+
+State 50
+
+   63 expr: IDENT . LPARENTHESIS contiExpr RPARENTHESIS
+   97 identOrArray: IDENT . lrSquareBracketList
+
+    LSQUAREBRACKET  shift, and go to state 76
+    LPARENTHESIS    shift, and go to state 77
+
+    $default  reduce using rule 44 (lrSquareBracketList)
+
+    lrSquareBracketList  go to state 78
+
+
+State 51
+
+   68 expr: ADD . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 79
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 52
+
+   69 expr: MINUS . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 80
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 53
+
+   66 expr: TILDA . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 81
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 54
+
+   67 expr: EXCLAMATION . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 82
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 55
+
+   64 expr: BITWISEAND . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 83
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 56
+
+   65 expr: MULSTAR . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 84
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 57
+
+   70 expr: ADDONE . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 85
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 58
+
+   71 expr: MINUSONE . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 86
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 59
+
+   59 expr: LPARENTHESIS . expr RPARENTHESIS
+   72     | LPARENTHESIS . type MULSTAR RPARENTHESIS expr
+   73     | LPARENTHESIS . type RPARENTHESIS expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    CONSTTYPE     shift, and go to state 1
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 31 (mayHaveConst)
+
+    type          go to state 87
+    type1         go to state 6
+    type2         go to state 7
+    type3         go to state 8
+    type4         go to state 9
+    mayHaveConst  go to state 10
+    expr          go to state 88
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 60
+
+   13 giveScalar: ASSIGN expr .
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 13 (giveScalar)
+
+
+State 61
+
+   53 expr: identOrArray .
+
+    $default  reduce using rule 53 (expr)
+
+
+State 62
+
+   62 expr: element . LPARENTHESIS contiExpr RPARENTHESIS
+
+    LPARENTHESIS  shift, and go to state 110
+
+
+State 63
+
+   40 array: IDENT LSQUAREBRACKET expr . RSQUAREBRACKET lrSquareBracketList giveArray
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ASSIGN          shift, and go to state 89
+    LOGICALOR       shift, and go to state 90
+    LOGICALAND      shift, and go to state 91
+    BITWISEOR       shift, and go to state 92
+    XOR             shift, and go to state 93
+    EQ              shift, and go to state 94
+    NOTEQ           shift, and go to state 95
+    BIGOREQ         shift, and go to state 96
+    SMALLOREQ       shift, and go to state 97
+    BIG             shift, and go to state 98
+    SMALL           shift, and go to state 99
+    SHIFTLEFT       shift, and go to state 100
+    SHIFTRIGHT      shift, and go to state 101
+    SLASH           shift, and go to state 102
+    MOD             shift, and go to state 103
+    ADD             shift, and go to state 104
+    MINUS           shift, and go to state 105
+    BITWISEAND      shift, and go to state 106
+    MULSTAR         shift, and go to state 107
+    ADDONE          shift, and go to state 108
+    MINUSONE        shift, and go to state 109
+    RSQUAREBRACKET  shift, and go to state 111
+
+
+State 64
+
+  109 parameter: type . IDENT
+  110          | type . MULSTAR IDENT
+
+    IDENT    shift, and go to state 112
+    MULSTAR  shift, and go to state 113
+
+
+State 65
+
+  103 functionDeclare: type IDENT LPARENTHESIS parameters . RPARENTHESIS EOL
+  111 functionDefinition: type IDENT LPARENTHESIS parameters . RPARENTHESIS compoundStmt
+
+    RPARENTHESIS  shift, and go to state 114
+
+
+State 66
+
+  105 parameters: parameter . parameterList
+
+    COMMA  shift, and go to state 115
+
+    $default  reduce using rule 108 (parameterList)
+
+    parameterList  go to state 116
+
+
+State 67
+
+  104 functionDeclare: type MULSTAR IDENT LPARENTHESIS . parameters RPARENTHESIS EOL
+  112 functionDefinition: type MULSTAR IDENT LPARENTHESIS . parameters RPARENTHESIS compoundStmt
+
+    CONSTTYPE  shift, and go to state 1
+
+    RPARENTHESIS  reduce using rule 106 (parameters)
+    $default      reduce using rule 31 (mayHaveConst)
+
+    type          go to state 64
+    type1         go to state 6
+    type2         go to state 7
+    type3         go to state 8
+    type4         go to state 9
+    mayHaveConst  go to state 10
+    parameters    go to state 117
+    parameter     go to state 66
+
+
+State 68
+
+   12 id: IDENT . giveScalar
+
+    ASSIGN  shift, and go to state 30
+
+    $default  reduce using rule 14 (giveScalar)
+
+    giveScalar  go to state 33
+
+
+State 69
+
+   10 ident: MULSTAR . id
+
+    IDENT  shift, and go to state 68
+
+    id  go to state 35
+
+
+State 70
+
+    8 identList: COMMA ident . identList
+
+    COMMA  shift, and go to state 36
+
+    $default  reduce using rule 9 (identList)
+
+    identList  go to state 118
+
+
+State 71
+
+    7 scalarDeclare: type ident identList EOL .
+
+    $default  reduce using rule 7 (scalarDeclare)
+
+
+State 72
+
+   40 array: IDENT . LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList giveArray
+
+    LSQUAREBRACKET  shift, and go to state 31
+
+
+State 73
+
+   41 arrayList: COMMA array . arrayList
+
+    COMMA  shift, and go to state 38
+
+    $default  reduce using rule 42 (arrayList)
+
+    arrayList  go to state 119
+
+
+State 74
+
+   39 arrayDeclare: type array arrayList EOL .
+
+    $default  reduce using rule 39 (arrayDeclare)
+
+
+State 75
+
+   19 type1: mayHaveConst mayHaveSign mayLongOrShort INTTYPE .
+
+    $default  reduce using rule 19 (type1)
+
+
+State 76
+
+   43 lrSquareBracketList: LSQUAREBRACKET . expr RSQUAREBRACKET lrSquareBracketList
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 120
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 77
+
+   63 expr: IDENT LPARENTHESIS . contiExpr RPARENTHESIS
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 94 (contiExpr)
+
+    expr          go to state 121
+    contiExpr     go to state 122
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 78
+
+   97 identOrArray: IDENT lrSquareBracketList .
+
+    $default  reduce using rule 97 (identOrArray)
+
+
+State 79
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   68     | ADD expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 68 (expr)
+
+
+State 80
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   69     | MINUS expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 69 (expr)
+
+
+State 81
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   66     | TILDA expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 66 (expr)
+
+
+State 82
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   67     | EXCLAMATION expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 67 (expr)
+
+
+State 83
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   64     | BITWISEAND expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 64 (expr)
+
+
+State 84
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   65     | MULSTAR expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 65 (expr)
+
+
+State 85
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   70     | ADDONE expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 70 (expr)
+
+
+State 86
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   71     | MINUSONE expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 71 (expr)
+
+
+State 87
+
+   72 expr: LPARENTHESIS type . MULSTAR RPARENTHESIS expr
+   73     | LPARENTHESIS type . RPARENTHESIS expr
+
+    MULSTAR       shift, and go to state 123
+    RPARENTHESIS  shift, and go to state 124
+
+
+State 88
+
+   59 expr: LPARENTHESIS expr . RPARENTHESIS
+   60     | expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ASSIGN        shift, and go to state 89
+    LOGICALOR     shift, and go to state 90
+    LOGICALAND    shift, and go to state 91
+    BITWISEOR     shift, and go to state 92
+    XOR           shift, and go to state 93
+    EQ            shift, and go to state 94
+    NOTEQ         shift, and go to state 95
+    BIGOREQ       shift, and go to state 96
+    SMALLOREQ     shift, and go to state 97
+    BIG           shift, and go to state 98
+    SMALL         shift, and go to state 99
+    SHIFTLEFT     shift, and go to state 100
+    SHIFTRIGHT    shift, and go to state 101
+    SLASH         shift, and go to state 102
+    MOD           shift, and go to state 103
+    ADD           shift, and go to state 104
+    MINUS         shift, and go to state 105
+    BITWISEAND    shift, and go to state 106
+    MULSTAR       shift, and go to state 107
+    ADDONE        shift, and go to state 108
+    MINUSONE      shift, and go to state 109
+    RPARENTHESIS  shift, and go to state 125
+
+
+State 89
+
+   92 expr: expr ASSIGN . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 126
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 90
+
+   91 expr: expr LOGICALOR . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 127
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 91
+
+   90 expr: expr LOGICALAND . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 128
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 92
+
+   89 expr: expr BITWISEOR . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 129
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 93
+
+   88 expr: expr XOR . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 130
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 94
+
+   85 expr: expr EQ . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 131
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 95
+
+   86 expr: expr NOTEQ . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 132
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 96
+
+   82 expr: expr BIGOREQ . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 133
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 97
+
+   84 expr: expr SMALLOREQ . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 134
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 98
+
+   81 expr: expr BIG . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 135
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 99
+
+   83 expr: expr SMALL . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 136
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 100
+
+   79 expr: expr SHIFTLEFT . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 137
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 101
+
+   80 expr: expr SHIFTRIGHT . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 138
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 102
+
+   75 expr: expr SLASH . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 139
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 103
+
+   76 expr: expr MOD . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 140
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 104
+
+   77 expr: expr ADD . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 141
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 105
+
+   78 expr: expr MINUS . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 142
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 106
+
+   87 expr: expr BITWISEAND . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 143
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 107
+
+   74 expr: expr MULSTAR . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 144
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 108
+
+   60 expr: expr ADDONE .
+
+    $default  reduce using rule 60 (expr)
+
+
+State 109
+
+   61 expr: expr MINUSONE .
+
+    $default  reduce using rule 61 (expr)
+
+
+State 110
+
+   62 expr: element LPARENTHESIS . contiExpr RPARENTHESIS
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 94 (contiExpr)
+
+    expr          go to state 121
+    contiExpr     go to state 145
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 111
+
+   40 array: IDENT LSQUAREBRACKET expr RSQUAREBRACKET . lrSquareBracketList giveArray
+
+    LSQUAREBRACKET  shift, and go to state 76
+
+    $default  reduce using rule 44 (lrSquareBracketList)
+
+    lrSquareBracketList  go to state 146
+
+
+State 112
+
+  109 parameter: type IDENT .
+
+    $default  reduce using rule 109 (parameter)
+
+
+State 113
+
+  110 parameter: type MULSTAR . IDENT
+
+    IDENT  shift, and go to state 147
+
+
+State 114
+
+  103 functionDeclare: type IDENT LPARENTHESIS parameters RPARENTHESIS . EOL
+  111 functionDefinition: type IDENT LPARENTHESIS parameters RPARENTHESIS . compoundStmt
+
+    EOL     shift, and go to state 148
+    LBRACE  shift, and go to state 149
+
+    compoundStmt  go to state 150
+
+
+State 115
+
+  107 parameterList: COMMA . parameter parameterList
+
+    CONSTTYPE  shift, and go to state 1
+
+    $default  reduce using rule 31 (mayHaveConst)
+
+    type          go to state 64
+    type1         go to state 6
+    type2         go to state 7
+    type3         go to state 8
+    type4         go to state 9
+    mayHaveConst  go to state 10
+    parameter     go to state 151
+
+
+State 116
+
+  105 parameters: parameter parameterList .
+
+    $default  reduce using rule 105 (parameters)
+
+
+State 117
+
+  104 functionDeclare: type MULSTAR IDENT LPARENTHESIS parameters . RPARENTHESIS EOL
+  112 functionDefinition: type MULSTAR IDENT LPARENTHESIS parameters . RPARENTHESIS compoundStmt
+
+    RPARENTHESIS  shift, and go to state 152
+
+
+State 118
+
+    8 identList: COMMA ident identList .
+
+    $default  reduce using rule 8 (identList)
+
+
+State 119
+
+   41 arrayList: COMMA array arrayList .
+
+    $default  reduce using rule 41 (arrayList)
+
+
+State 120
+
+   43 lrSquareBracketList: LSQUAREBRACKET expr . RSQUAREBRACKET lrSquareBracketList
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ASSIGN          shift, and go to state 89
+    LOGICALOR       shift, and go to state 90
+    LOGICALAND      shift, and go to state 91
+    BITWISEOR       shift, and go to state 92
+    XOR             shift, and go to state 93
+    EQ              shift, and go to state 94
+    NOTEQ           shift, and go to state 95
+    BIGOREQ         shift, and go to state 96
+    SMALLOREQ       shift, and go to state 97
+    BIG             shift, and go to state 98
+    SMALL           shift, and go to state 99
+    SHIFTLEFT       shift, and go to state 100
+    SHIFTRIGHT      shift, and go to state 101
+    SLASH           shift, and go to state 102
+    MOD             shift, and go to state 103
+    ADD             shift, and go to state 104
+    MINUS           shift, and go to state 105
+    BITWISEAND      shift, and go to state 106
+    MULSTAR         shift, and go to state 107
+    ADDONE          shift, and go to state 108
+    MINUSONE        shift, and go to state 109
+    RSQUAREBRACKET  shift, and go to state 153
+
+
+State 121
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+   93 contiExpr: expr . exprList
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+    COMMA       shift, and go to state 154
+
+    $default  reduce using rule 96 (exprList)
+
+    exprList  go to state 155
+
+
+State 122
+
+   63 expr: IDENT LPARENTHESIS contiExpr . RPARENTHESIS
+
+    RPARENTHESIS  shift, and go to state 156
+
+
+State 123
+
+   72 expr: LPARENTHESIS type MULSTAR . RPARENTHESIS expr
+
+    RPARENTHESIS  shift, and go to state 157
+
+
+State 124
+
+   73 expr: LPARENTHESIS type RPARENTHESIS . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 158
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 125
+
+   59 expr: LPARENTHESIS expr RPARENTHESIS .
+
+    $default  reduce using rule 59 (expr)
+
+
+State 126
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+   92     | expr ASSIGN expr .
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 92 (expr)
+
+
+State 127
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   91     | expr LOGICALOR expr .
+   92     | expr . ASSIGN expr
+
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 91 (expr)
+
+
+State 128
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   90     | expr LOGICALAND expr .
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 90 (expr)
+
+
+State 129
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   89     | expr BITWISEOR expr .
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 89 (expr)
+
+
+State 130
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   88     | expr XOR expr .
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 88 (expr)
+
+
+State 131
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   85     | expr EQ expr .
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 85 (expr)
+
+
+State 132
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   86     | expr NOTEQ expr .
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 86 (expr)
+
+
+State 133
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   82     | expr BIGOREQ expr .
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 82 (expr)
+
+
+State 134
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   84     | expr SMALLOREQ expr .
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 84 (expr)
+
+
+State 135
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   81     | expr BIG expr .
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 81 (expr)
+
+
+State 136
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   83     | expr SMALL expr .
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 83 (expr)
+
+
+State 137
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   79     | expr SHIFTLEFT expr .
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SLASH     shift, and go to state 102
+    MOD       shift, and go to state 103
+    ADD       shift, and go to state 104
+    MINUS     shift, and go to state 105
+    MULSTAR   shift, and go to state 107
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 79 (expr)
+
+
+State 138
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   80     | expr SHIFTRIGHT expr .
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SLASH     shift, and go to state 102
+    MOD       shift, and go to state 103
+    ADD       shift, and go to state 104
+    MINUS     shift, and go to state 105
+    MULSTAR   shift, and go to state 107
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 80 (expr)
+
+
+State 139
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   75     | expr SLASH expr .
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 75 (expr)
+
+
+State 140
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   76     | expr MOD expr .
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 76 (expr)
+
+
+State 141
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   77     | expr ADD expr .
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SLASH     shift, and go to state 102
+    MOD       shift, and go to state 103
+    MULSTAR   shift, and go to state 107
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 77 (expr)
+
+
+State 142
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   78     | expr MINUS expr .
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    SLASH     shift, and go to state 102
+    MOD       shift, and go to state 103
+    MULSTAR   shift, and go to state 107
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 78 (expr)
+
+
+State 143
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   87     | expr BITWISEAND expr .
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 87 (expr)
+
+
+State 144
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   74     | expr MULSTAR expr .
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 74 (expr)
+
+
+State 145
+
+   62 expr: element LPARENTHESIS contiExpr . RPARENTHESIS
+
+    RPARENTHESIS  shift, and go to state 159
+
+
+State 146
+
+   40 array: IDENT LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList . giveArray
+
+    ASSIGN  shift, and go to state 160
+
+    $default  reduce using rule 46 (giveArray)
+
+    giveArray  go to state 161
+
+
+State 147
+
+  110 parameter: type MULSTAR IDENT .
+
+    $default  reduce using rule 110 (parameter)
+
+
+State 148
+
+  103 functionDeclare: type IDENT LPARENTHESIS parameters RPARENTHESIS EOL .
+
+    $default  reduce using rule 103 (functionDeclare)
+
+
+State 149
+
+  113 compoundStmt: LBRACE . stmtOrVarDeclares RBRACE
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    CONSTTYPE     shift, and go to state 1
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    RBRACE    reduce using rule 115 (stmtOrVarDeclares)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    scalarDeclare            go to state 170
+    type                     go to state 171
+    type1                    go to state 6
+    type2                    go to state 7
+    type3                    go to state 8
+    type4                    go to state 9
+    mayHaveConst             go to state 10
+    arrayDeclare             go to state 172
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmtOrVarDeclares        go to state 175
+    stmtOrVarDeclare         go to state 176
+    stmt                     go to state 177
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    ifOrIfElseStmt           go to state 182
+
+
+State 150
+
+  111 functionDefinition: type IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt .
+
+    $default  reduce using rule 111 (functionDefinition)
+
+
+State 151
+
+  107 parameterList: COMMA parameter . parameterList
+
+    COMMA  shift, and go to state 115
+
+    $default  reduce using rule 108 (parameterList)
+
+    parameterList  go to state 183
+
+
+State 152
+
+  104 functionDeclare: type MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS . EOL
+  112 functionDefinition: type MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS . compoundStmt
+
+    EOL     shift, and go to state 184
+    LBRACE  shift, and go to state 149
+
+    compoundStmt  go to state 185
+
+
+State 153
+
+   43 lrSquareBracketList: LSQUAREBRACKET expr RSQUAREBRACKET . lrSquareBracketList
+
+    LSQUAREBRACKET  shift, and go to state 76
+
+    $default  reduce using rule 44 (lrSquareBracketList)
+
+    lrSquareBracketList  go to state 186
+
+
+State 154
+
+   95 exprList: COMMA . expr exprList
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 187
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 155
+
+   93 contiExpr: expr exprList .
+
+    $default  reduce using rule 93 (contiExpr)
+
+
+State 156
+
+   63 expr: IDENT LPARENTHESIS contiExpr RPARENTHESIS .
+
+    $default  reduce using rule 63 (expr)
+
+
+State 157
+
+   72 expr: LPARENTHESIS type MULSTAR RPARENTHESIS . expr
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 188
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 158
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   73     | LPARENTHESIS type RPARENTHESIS expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 73 (expr)
+
+
+State 159
+
+   62 expr: element LPARENTHESIS contiExpr RPARENTHESIS .
+
+    $default  reduce using rule 62 (expr)
+
+
+State 160
+
+   45 giveArray: ASSIGN . arrayContent
+
+    LBRACE  shift, and go to state 189
+
+    $default  reduce using rule 48 (arrayContent)
+
+    arrayContent  go to state 190
+
+
+State 161
+
+   40 array: IDENT LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList giveArray .
+
+    $default  reduce using rule 40 (array)
+
+
+State 162
+
+  126 returnBreakContinueStmt: RETURN . expr EOL
+  127                        | RETURN . EOL
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    EOL           shift, and go to state 191
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 192
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 163
+
+  128 returnBreakContinueStmt: BREAK . EOL
+
+    EOL  shift, and go to state 193
+
+
+State 164
+
+  129 returnBreakContinueStmt: CONTINUE . EOL
+
+    EOL  shift, and go to state 194
+
+
+State 165
+
+  130 forStmt: FOR . LPARENTHESIS mayHaveExpr EOL mayHaveExpr EOL mayHaveExpr RPARENTHESIS stmt
+
+    LPARENTHESIS  shift, and go to state 195
+
+
+State 166
+
+  133 whileStmt: WHILE . LPARENTHESIS expr RPARENTHESIS stmt
+
+    LPARENTHESIS  shift, and go to state 196
+
+
+State 167
+
+  134 whileStmt: DO . stmt WHILE LPARENTHESIS expr RPARENTHESIS EOL
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmt                     go to state 197
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    ifOrIfElseStmt           go to state 182
+
+
+State 168
+
+  135 switchStmt: SWITCH . LPARENTHESIS expr RPARENTHESIS LBRACE switchCluses RBRACE
+
+    LPARENTHESIS  shift, and go to state 198
+
+
+State 169
+
+  142 ifOrIfElseStmt: IF . LPARENTHESIS expr RPARENTHESIS compoundStmt mayHaveElse
+
+    LPARENTHESIS  shift, and go to state 199
+
+
+State 170
+
+  117 stmtOrVarDeclare: scalarDeclare .
+
+    $default  reduce using rule 117 (stmtOrVarDeclare)
+
+
+State 171
+
+    7 scalarDeclare: type . ident identList EOL
+   39 arrayDeclare: type . array arrayList EOL
+
+    IDENT    shift, and go to state 200
+    MULSTAR  shift, and go to state 69
+
+    ident  go to state 18
+    id     go to state 19
+    array  go to state 20
+
+
+State 172
+
+  118 stmtOrVarDeclare: arrayDeclare .
+
+    $default  reduce using rule 118 (stmtOrVarDeclare)
+
+
+State 173
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  119 stmt: expr . EOL
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+    EOL         shift, and go to state 201
+
+
+State 174
+
+  125 stmt: compoundStmt .
+
+    $default  reduce using rule 125 (stmt)
+
+
+State 175
+
+  113 compoundStmt: LBRACE stmtOrVarDeclares . RBRACE
+
+    RBRACE  shift, and go to state 202
+
+
+State 176
+
+  114 stmtOrVarDeclares: stmtOrVarDeclare . stmtOrVarDeclares
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    CONSTTYPE     shift, and go to state 1
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    RBRACE    reduce using rule 115 (stmtOrVarDeclares)
+    $default  reduce using rule 31 (mayHaveConst)
+
+    scalarDeclare            go to state 170
+    type                     go to state 171
+    type1                    go to state 6
+    type2                    go to state 7
+    type3                    go to state 8
+    type4                    go to state 9
+    mayHaveConst             go to state 10
+    arrayDeclare             go to state 172
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmtOrVarDeclares        go to state 203
+    stmtOrVarDeclare         go to state 176
+    stmt                     go to state 177
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    ifOrIfElseStmt           go to state 182
+
+
+State 177
+
+  116 stmtOrVarDeclare: stmt .
+
+    $default  reduce using rule 116 (stmtOrVarDeclare)
+
+
+State 178
+
+  124 stmt: returnBreakContinueStmt .
+
+    $default  reduce using rule 124 (stmt)
+
+
+State 179
+
+  123 stmt: forStmt .
+
+    $default  reduce using rule 123 (stmt)
+
+
+State 180
+
+  122 stmt: whileStmt .
+
+    $default  reduce using rule 122 (stmt)
+
+
+State 181
+
+  121 stmt: switchStmt .
+
+    $default  reduce using rule 121 (stmt)
+
+
+State 182
+
+  120 stmt: ifOrIfElseStmt .
+
+    $default  reduce using rule 120 (stmt)
+
+
+State 183
+
+  107 parameterList: COMMA parameter parameterList .
+
+    $default  reduce using rule 107 (parameterList)
+
+
+State 184
+
+  104 functionDeclare: type MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS EOL .
+
+    $default  reduce using rule 104 (functionDeclare)
+
+
+State 185
+
+  112 functionDefinition: type MULSTAR IDENT LPARENTHESIS parameters RPARENTHESIS compoundStmt .
+
+    $default  reduce using rule 112 (functionDefinition)
+
+
+State 186
+
+   43 lrSquareBracketList: LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList .
+
+    $default  reduce using rule 43 (lrSquareBracketList)
+
+
+State 187
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+   95 exprList: COMMA expr . exprList
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+    COMMA       shift, and go to state 154
+
+    $default  reduce using rule 96 (exprList)
+
+    exprList  go to state 204
+
+
+State 188
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   72     | LPARENTHESIS type MULSTAR RPARENTHESIS expr .
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ADDONE    shift, and go to state 108
+    MINUSONE  shift, and go to state 109
+
+    $default  reduce using rule 72 (expr)
+
+
+State 189
+
+   47 arrayContent: LBRACE . item itemList RBRACE
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 189
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 48 (arrayContent)
+
+    arrayContent  go to state 205
+    item          go to state 206
+    expr          go to state 207
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 190
+
+   45 giveArray: ASSIGN arrayContent .
+
+    $default  reduce using rule 45 (giveArray)
+
+
+State 191
+
+  127 returnBreakContinueStmt: RETURN EOL .
+
+    $default  reduce using rule 127 (returnBreakContinueStmt)
+
+
+State 192
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  126 returnBreakContinueStmt: RETURN expr . EOL
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+    EOL         shift, and go to state 208
+
+
+State 193
+
+  128 returnBreakContinueStmt: BREAK EOL .
+
+    $default  reduce using rule 128 (returnBreakContinueStmt)
+
+
+State 194
+
+  129 returnBreakContinueStmt: CONTINUE EOL .
+
+    $default  reduce using rule 129 (returnBreakContinueStmt)
+
+
+State 195
+
+  130 forStmt: FOR LPARENTHESIS . mayHaveExpr EOL mayHaveExpr EOL mayHaveExpr RPARENTHESIS stmt
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 132 (mayHaveExpr)
+
+    expr          go to state 209
+    identOrArray  go to state 61
+    element       go to state 62
+    mayHaveExpr   go to state 210
+
+
+State 196
+
+  133 whileStmt: WHILE LPARENTHESIS . expr RPARENTHESIS stmt
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 211
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 197
+
+  134 whileStmt: DO stmt . WHILE LPARENTHESIS expr RPARENTHESIS EOL
+
+    WHILE  shift, and go to state 212
+
+
+State 198
+
+  135 switchStmt: SWITCH LPARENTHESIS . expr RPARENTHESIS LBRACE switchCluses RBRACE
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 213
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 199
+
+  142 ifOrIfElseStmt: IF LPARENTHESIS . expr RPARENTHESIS compoundStmt mayHaveElse
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 214
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 200
+
+   12 id: IDENT . giveScalar
+   40 array: IDENT . LSQUAREBRACKET expr RSQUAREBRACKET lrSquareBracketList giveArray
+
+    ASSIGN          shift, and go to state 30
+    LSQUAREBRACKET  shift, and go to state 31
+
+    $default  reduce using rule 14 (giveScalar)
+
+    giveScalar  go to state 33
+
+
+State 201
+
+  119 stmt: expr EOL .
+
+    $default  reduce using rule 119 (stmt)
+
+
+State 202
+
+  113 compoundStmt: LBRACE stmtOrVarDeclares RBRACE .
+
+    $default  reduce using rule 113 (compoundStmt)
+
+
+State 203
+
+  114 stmtOrVarDeclares: stmtOrVarDeclare stmtOrVarDeclares .
+
+    $default  reduce using rule 114 (stmtOrVarDeclares)
+
+
+State 204
+
+   95 exprList: COMMA expr exprList .
+
+    $default  reduce using rule 95 (exprList)
+
+
+State 205
+
+   52 item: arrayContent .
+
+    $default  reduce using rule 52 (item)
+
+
+State 206
+
+   47 arrayContent: LBRACE item . itemList RBRACE
+
+    COMMA  shift, and go to state 215
+
+    $default  reduce using rule 50 (itemList)
+
+    itemList  go to state 216
+
+
+State 207
+
+   51 item: expr .
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 51 (item)
+
+
+State 208
+
+  126 returnBreakContinueStmt: RETURN expr EOL .
+
+    $default  reduce using rule 126 (returnBreakContinueStmt)
+
+
+State 209
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  131 mayHaveExpr: expr .
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+
+    $default  reduce using rule 131 (mayHaveExpr)
+
+
+State 210
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr . EOL mayHaveExpr EOL mayHaveExpr RPARENTHESIS stmt
+
+    EOL  shift, and go to state 217
+
+
+State 211
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  133 whileStmt: WHILE LPARENTHESIS expr . RPARENTHESIS stmt
+
+    ASSIGN        shift, and go to state 89
+    LOGICALOR     shift, and go to state 90
+    LOGICALAND    shift, and go to state 91
+    BITWISEOR     shift, and go to state 92
+    XOR           shift, and go to state 93
+    EQ            shift, and go to state 94
+    NOTEQ         shift, and go to state 95
+    BIGOREQ       shift, and go to state 96
+    SMALLOREQ     shift, and go to state 97
+    BIG           shift, and go to state 98
+    SMALL         shift, and go to state 99
+    SHIFTLEFT     shift, and go to state 100
+    SHIFTRIGHT    shift, and go to state 101
+    SLASH         shift, and go to state 102
+    MOD           shift, and go to state 103
+    ADD           shift, and go to state 104
+    MINUS         shift, and go to state 105
+    BITWISEAND    shift, and go to state 106
+    MULSTAR       shift, and go to state 107
+    ADDONE        shift, and go to state 108
+    MINUSONE      shift, and go to state 109
+    RPARENTHESIS  shift, and go to state 218
+
+
+State 212
+
+  134 whileStmt: DO stmt WHILE . LPARENTHESIS expr RPARENTHESIS EOL
+
+    LPARENTHESIS  shift, and go to state 219
+
+
+State 213
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  135 switchStmt: SWITCH LPARENTHESIS expr . RPARENTHESIS LBRACE switchCluses RBRACE
+
+    ASSIGN        shift, and go to state 89
+    LOGICALOR     shift, and go to state 90
+    LOGICALAND    shift, and go to state 91
+    BITWISEOR     shift, and go to state 92
+    XOR           shift, and go to state 93
+    EQ            shift, and go to state 94
+    NOTEQ         shift, and go to state 95
+    BIGOREQ       shift, and go to state 96
+    SMALLOREQ     shift, and go to state 97
+    BIG           shift, and go to state 98
+    SMALL         shift, and go to state 99
+    SHIFTLEFT     shift, and go to state 100
+    SHIFTRIGHT    shift, and go to state 101
+    SLASH         shift, and go to state 102
+    MOD           shift, and go to state 103
+    ADD           shift, and go to state 104
+    MINUS         shift, and go to state 105
+    BITWISEAND    shift, and go to state 106
+    MULSTAR       shift, and go to state 107
+    ADDONE        shift, and go to state 108
+    MINUSONE      shift, and go to state 109
+    RPARENTHESIS  shift, and go to state 220
+
+
+State 214
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  142 ifOrIfElseStmt: IF LPARENTHESIS expr . RPARENTHESIS compoundStmt mayHaveElse
+
+    ASSIGN        shift, and go to state 89
+    LOGICALOR     shift, and go to state 90
+    LOGICALAND    shift, and go to state 91
+    BITWISEOR     shift, and go to state 92
+    XOR           shift, and go to state 93
+    EQ            shift, and go to state 94
+    NOTEQ         shift, and go to state 95
+    BIGOREQ       shift, and go to state 96
+    SMALLOREQ     shift, and go to state 97
+    BIG           shift, and go to state 98
+    SMALL         shift, and go to state 99
+    SHIFTLEFT     shift, and go to state 100
+    SHIFTRIGHT    shift, and go to state 101
+    SLASH         shift, and go to state 102
+    MOD           shift, and go to state 103
+    ADD           shift, and go to state 104
+    MINUS         shift, and go to state 105
+    BITWISEAND    shift, and go to state 106
+    MULSTAR       shift, and go to state 107
+    ADDONE        shift, and go to state 108
+    MINUSONE      shift, and go to state 109
+    RPARENTHESIS  shift, and go to state 221
+
+
+State 215
+
+   49 itemList: COMMA . item itemList
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 189
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 48 (arrayContent)
+
+    arrayContent  go to state 205
+    item          go to state 222
+    expr          go to state 207
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 216
+
+   47 arrayContent: LBRACE item itemList . RBRACE
+
+    RBRACE  shift, and go to state 223
+
+
+State 217
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL . mayHaveExpr EOL mayHaveExpr RPARENTHESIS stmt
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 132 (mayHaveExpr)
+
+    expr          go to state 209
+    identOrArray  go to state 61
+    element       go to state 62
+    mayHaveExpr   go to state 224
+
+
+State 218
+
+  133 whileStmt: WHILE LPARENTHESIS expr RPARENTHESIS . stmt
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmt                     go to state 225
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    ifOrIfElseStmt           go to state 182
+
+
+State 219
+
+  134 whileStmt: DO stmt WHILE LPARENTHESIS . expr RPARENTHESIS EOL
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 226
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 220
+
+  135 switchStmt: SWITCH LPARENTHESIS expr RPARENTHESIS . LBRACE switchCluses RBRACE
+
+    LBRACE  shift, and go to state 227
+
+
+State 221
+
+  142 ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS . compoundStmt mayHaveElse
+
+    LBRACE  shift, and go to state 149
+
+    compoundStmt  go to state 228
+
+
+State 222
+
+   49 itemList: COMMA item . itemList
+
+    COMMA  shift, and go to state 215
+
+    $default  reduce using rule 50 (itemList)
+
+    itemList  go to state 229
+
+
+State 223
+
+   47 arrayContent: LBRACE item itemList RBRACE .
+
+    $default  reduce using rule 47 (arrayContent)
+
+
+State 224
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL mayHaveExpr . EOL mayHaveExpr RPARENTHESIS stmt
+
+    EOL  shift, and go to state 230
+
+
+State 225
+
+  133 whileStmt: WHILE LPARENTHESIS expr RPARENTHESIS stmt .
+
+    $default  reduce using rule 133 (whileStmt)
+
+
+State 226
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  134 whileStmt: DO stmt WHILE LPARENTHESIS expr . RPARENTHESIS EOL
+
+    ASSIGN        shift, and go to state 89
+    LOGICALOR     shift, and go to state 90
+    LOGICALAND    shift, and go to state 91
+    BITWISEOR     shift, and go to state 92
+    XOR           shift, and go to state 93
+    EQ            shift, and go to state 94
+    NOTEQ         shift, and go to state 95
+    BIGOREQ       shift, and go to state 96
+    SMALLOREQ     shift, and go to state 97
+    BIG           shift, and go to state 98
+    SMALL         shift, and go to state 99
+    SHIFTLEFT     shift, and go to state 100
+    SHIFTRIGHT    shift, and go to state 101
+    SLASH         shift, and go to state 102
+    MOD           shift, and go to state 103
+    ADD           shift, and go to state 104
+    MINUS         shift, and go to state 105
+    BITWISEAND    shift, and go to state 106
+    MULSTAR       shift, and go to state 107
+    ADDONE        shift, and go to state 108
+    MINUSONE      shift, and go to state 109
+    RPARENTHESIS  shift, and go to state 231
+
+
+State 227
+
+  135 switchStmt: SWITCH LPARENTHESIS expr RPARENTHESIS LBRACE . switchCluses RBRACE
+
+    CASE     shift, and go to state 232
+    DEFAULT  shift, and go to state 233
+
+    $default  reduce using rule 137 (switchCluses)
+
+    switchCluses  go to state 234
+    switchClue    go to state 235
+
+
+State 228
+
+  142 ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS compoundStmt . mayHaveElse
+
+    ELSE  shift, and go to state 236
+
+    $default  reduce using rule 144 (mayHaveElse)
+
+    mayHaveElse  go to state 237
+
+
+State 229
+
+   49 itemList: COMMA item itemList .
+
+    $default  reduce using rule 49 (itemList)
+
+
+State 230
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL mayHaveExpr EOL . mayHaveExpr RPARENTHESIS stmt
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 132 (mayHaveExpr)
+
+    expr          go to state 209
+    identOrArray  go to state 61
+    element       go to state 62
+    mayHaveExpr   go to state 238
+
+
+State 231
+
+  134 whileStmt: DO stmt WHILE LPARENTHESIS expr RPARENTHESIS . EOL
+
+    EOL  shift, and go to state 239
+
+
+State 232
+
+  138 switchClue: CASE . expr COLON stmts
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LPARENTHESIS  shift, and go to state 59
+
+    expr          go to state 240
+    identOrArray  go to state 61
+    element       go to state 62
+
+
+State 233
+
+  139 switchClue: DEFAULT . COLON stmts
+
+    COLON  shift, and go to state 241
+
+
+State 234
+
+  135 switchStmt: SWITCH LPARENTHESIS expr RPARENTHESIS LBRACE switchCluses . RBRACE
+
+    RBRACE  shift, and go to state 242
+
+
+State 235
+
+  136 switchCluses: switchClue . switchCluses
+
+    CASE     shift, and go to state 232
+    DEFAULT  shift, and go to state 233
+
+    $default  reduce using rule 137 (switchCluses)
+
+    switchCluses  go to state 243
+    switchClue    go to state 235
+
+
+State 236
+
+  143 mayHaveElse: ELSE . compoundStmt
+
+    LBRACE  shift, and go to state 149
+
+    compoundStmt  go to state 244
+
+
+State 237
+
+  142 ifOrIfElseStmt: IF LPARENTHESIS expr RPARENTHESIS compoundStmt mayHaveElse .
+
+    $default  reduce using rule 142 (ifOrIfElseStmt)
+
+
+State 238
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL mayHaveExpr EOL mayHaveExpr . RPARENTHESIS stmt
+
+    RPARENTHESIS  shift, and go to state 245
+
+
+State 239
+
+  134 whileStmt: DO stmt WHILE LPARENTHESIS expr RPARENTHESIS EOL .
+
+    $default  reduce using rule 134 (whileStmt)
+
+
+State 240
+
+   60 expr: expr . ADDONE
+   61     | expr . MINUSONE
+   74     | expr . MULSTAR expr
+   75     | expr . SLASH expr
+   76     | expr . MOD expr
+   77     | expr . ADD expr
+   78     | expr . MINUS expr
+   79     | expr . SHIFTLEFT expr
+   80     | expr . SHIFTRIGHT expr
+   81     | expr . BIG expr
+   82     | expr . BIGOREQ expr
+   83     | expr . SMALL expr
+   84     | expr . SMALLOREQ expr
+   85     | expr . EQ expr
+   86     | expr . NOTEQ expr
+   87     | expr . BITWISEAND expr
+   88     | expr . XOR expr
+   89     | expr . BITWISEOR expr
+   90     | expr . LOGICALAND expr
+   91     | expr . LOGICALOR expr
+   92     | expr . ASSIGN expr
+  138 switchClue: CASE expr . COLON stmts
+
+    ASSIGN      shift, and go to state 89
+    LOGICALOR   shift, and go to state 90
+    LOGICALAND  shift, and go to state 91
+    BITWISEOR   shift, and go to state 92
+    XOR         shift, and go to state 93
+    EQ          shift, and go to state 94
+    NOTEQ       shift, and go to state 95
+    BIGOREQ     shift, and go to state 96
+    SMALLOREQ   shift, and go to state 97
+    BIG         shift, and go to state 98
+    SMALL       shift, and go to state 99
+    SHIFTLEFT   shift, and go to state 100
+    SHIFTRIGHT  shift, and go to state 101
+    SLASH       shift, and go to state 102
+    MOD         shift, and go to state 103
+    ADD         shift, and go to state 104
+    MINUS       shift, and go to state 105
+    BITWISEAND  shift, and go to state 106
+    MULSTAR     shift, and go to state 107
+    ADDONE      shift, and go to state 108
+    MINUSONE    shift, and go to state 109
+    COLON       shift, and go to state 246
+
+
+State 241
+
+  139 switchClue: DEFAULT COLON . stmts
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 141 (stmts)
+
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmt                     go to state 247
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    stmts                    go to state 248
+    ifOrIfElseStmt           go to state 182
+
+
+State 242
+
+  135 switchStmt: SWITCH LPARENTHESIS expr RPARENTHESIS LBRACE switchCluses RBRACE .
+
+    $default  reduce using rule 135 (switchStmt)
+
+
+State 243
+
+  136 switchCluses: switchClue switchCluses .
+
+    $default  reduce using rule 136 (switchCluses)
+
+
+State 244
+
+  143 mayHaveElse: ELSE compoundStmt .
+
+    $default  reduce using rule 143 (mayHaveElse)
+
+
+State 245
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL mayHaveExpr EOL mayHaveExpr RPARENTHESIS . stmt
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmt                     go to state 249
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    ifOrIfElseStmt           go to state 182
+
+
+State 246
+
+  138 switchClue: CASE expr COLON . stmts
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 141 (stmts)
+
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmt                     go to state 247
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    stmts                    go to state 250
+    ifOrIfElseStmt           go to state 182
+
+
+State 247
+
+  140 stmts: stmt . stmts
+
+    INT           shift, and go to state 45
+    MYCHAR        shift, and go to state 46
+    MYSTRING      shift, and go to state 47
+    MYNULL        shift, and go to state 48
+    DOUBLE        shift, and go to state 49
+    RETURN        shift, and go to state 162
+    BREAK         shift, and go to state 163
+    CONTINUE      shift, and go to state 164
+    FOR           shift, and go to state 165
+    WHILE         shift, and go to state 166
+    DO            shift, and go to state 167
+    SWITCH        shift, and go to state 168
+    IF            shift, and go to state 169
+    IDENT         shift, and go to state 50
+    ADD           shift, and go to state 51
+    MINUS         shift, and go to state 52
+    TILDA         shift, and go to state 53
+    EXCLAMATION   shift, and go to state 54
+    BITWISEAND    shift, and go to state 55
+    MULSTAR       shift, and go to state 56
+    ADDONE        shift, and go to state 57
+    MINUSONE      shift, and go to state 58
+    LBRACE        shift, and go to state 149
+    LPARENTHESIS  shift, and go to state 59
+
+    $default  reduce using rule 141 (stmts)
+
+    expr                     go to state 173
+    identOrArray             go to state 61
+    element                  go to state 62
+    compoundStmt             go to state 174
+    stmt                     go to state 247
+    returnBreakContinueStmt  go to state 178
+    forStmt                  go to state 179
+    whileStmt                go to state 180
+    switchStmt               go to state 181
+    stmts                    go to state 251
+    ifOrIfElseStmt           go to state 182
+
+
+State 248
+
+  139 switchClue: DEFAULT COLON stmts .
+
+    $default  reduce using rule 139 (switchClue)
+
+
+State 249
+
+  130 forStmt: FOR LPARENTHESIS mayHaveExpr EOL mayHaveExpr EOL mayHaveExpr RPARENTHESIS stmt .
+
+    $default  reduce using rule 130 (forStmt)
+
+
+State 250
+
+  138 switchClue: CASE expr COLON stmts .
+
+    $default  reduce using rule 138 (switchClue)
+
+
+State 251
+
+  140 stmts: stmt stmts .
+
+    $default  reduce using rule 140 (stmts)

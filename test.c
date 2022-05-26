@@ -1,4 +1,7 @@
-int a = *fnc(1,2,3)++;
+int main(){
+	(a+b)(c+d) = ac+ad+bc+bd;
+}
+/*int a = *fnc(1,2,3)++;
 int a; 
 int b,c,D,f; int arr[14],a[1][2][4];
 int main(){
@@ -63,3 +66,4 @@ int* fm(int a, char b, double c, const char d, float f, const long long g, int* 
 	}
 	return 0;
 }
+*/
