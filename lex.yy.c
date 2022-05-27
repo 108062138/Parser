@@ -1264,9 +1264,9 @@ char *yytext;
 #include<stdio.h>
 #include<string.h>
 #include"y.tab.h"
-char dest[600] = "";
-char charBuffer[600] = "";
-char stringBuffer[600] = "";
+char dest[6600] = "";
+char charBuffer[6600] = "";
+char stringBuffer[6600] = "";
 int debugFlag = 0;//1 for debug, and 0 for produce 
 int lineCnt = 0;
 int firstLine=1;//1 for first, otherwise 0

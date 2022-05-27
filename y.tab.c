@@ -98,7 +98,7 @@ char* doubleToString(double x) {
     return s;
 }
 char* reserveStr(int size){
-    char* s = malloc(sizeof(char)*(size+60)); strcpy(s,"");
+    char* s = malloc(sizeof(char)*(size+30)); strcpy(s,"");
     return s;
 }
 
