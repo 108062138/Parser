@@ -2,7 +2,7 @@ int a = *fnc(1,2,3)++;
 int a; 
 int b,c,D,f; int arr[14],a[1][2][4];
 int main(){
-    for(int i=0;i<5;i++){
+    for(i=0;i<5;i++){
         printf("%d",i);
     }
 	int a ,k =a = b = 13 = 'a' = 12.55 = c = 3 = 6=7;
