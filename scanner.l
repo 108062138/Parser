@@ -22,7 +22,7 @@ ASCII1 (" "|"!"|"\\\""|"#"|"$"|"%"|"&"|"\\\'"|"("|")"|"*"|"+"|","|"-"|"."|"/"|"0
 ASCII2 ("@"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|"Z"|"["|"\\"|"]"|"^"|"_")
 ASCII3 ("`"|"a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z"|"{"|"|"|"}"|"~")
 ESC ("\\a"|"\\b"|"\\e"|"\\f"|"\\n"|"\\r"|"\\t"|"\\v"|"\\\\"|"\\\'"|"\\\""|"\\\?")
-KEYWORD ("for"|"do"|"while"|"break"|"continue"|"if"|"else"|"return"|"struct"|"switch"|"case"|"default"|"void"|"int"|"double"|"float"|"char"|"const"|"signed"|"unsigned"|"short"|"long")
+KEYWORD ("for"|"do"|"while"|"break"|"continue"|"if"|"else"|"return"|"struct"|"switch"|"case"|"default"|"void"|"int"|"double"|"float"|"char"|"const"|"signed"|"unsigned"|"short"|"long"|"char4"|"char8")
 PUNC (":"|";"|","|"."|"["|"]"|"("|")"|"{"|"}")
 NUMBER ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")
 LOWERCASE ("a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z")
@@ -186,6 +186,9 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
 "^" { yylval.sVal = strdup(yytext); return XOR;}
 "|" { yylval.sVal = strdup(yytext); return BITWISEOR;}
 
+"char4" { yylval.sVal = strdup(yytext); return CHAR4TYPE;}
+"char8" { yylval.sVal = strdup(yytext); return CHAR8TYPE;}
+
 "int" { yylval.sVal = strdup(yytext); return INTTYPE;}
 "char" { yylval.sVal = strdup(yytext); return CHARTYPE;}
 "string" { yylval.sVal = strdup(yytext); return STRINGTYPE;}
@@ -198,7 +201,6 @@ HEXA ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"a"|"b"|"c"|"d"|"e"|"f"|"A"|"B"|"C
 "long" { yylval.sVal = strdup(yytext); return LONGTYPE;}
 "short" { yylval.sVal = strdup(yytext); return SHORTTYPE;}
 "void" { yylval.sVal = strdup(yytext); return VOIDTYPE;}
-
 
 "return" { yylval.sVal = strdup(yytext); return RETURN;}
 "break" { yylval.sVal = strdup(yytext); return BREAK;}
